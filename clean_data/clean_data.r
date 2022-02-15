@@ -55,25 +55,34 @@ raw_data %>%
   view()
 
 raw_data %>%
-  count(Antimicrobial)%>%
+  count(antimicrobial)%>%
   view()
 
 #Cleaning antimicrobials colunm
 
 raw_data<- raw_data%>%
   mutate(
-    Antimicrobial = 
-           ifelse(Antimicrobial == "Amoxicillin–clavulanic acid", 
-                  "Amoxicillin-clavulanic acid", Antimicrobial
+    antimicrobial = 
+           ifelse(antimicrobial == "Amoxicillin–clavulanic acid", 
+                  "Amoxicillin-clavulanic acid", antimicrobial
                   )
     )
 
 
 raw_data<- raw_data%>%
   mutate(
-    Antimicrobial = 
-      ifelse(Antimicrobial == "Cefeclor", 
-             "Cefaclor", Antimicrobial
+    antimicrobial = 
+      ifelse(antimicrobial == "Amoxicillinclavulanic acid", 
+             "Amoxicillin-clavulanic acid", antimicrobial
+      )
+  )
+
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial = 
+      ifelse(antimicrobial == "Cefeclor", 
+             "Cefaclor", antimicrobial
       )
   )
 
@@ -81,18 +90,18 @@ raw_data<- raw_data%>%
 
 raw_data<- raw_data%>%
   mutate(
-    Antimicrobial = 
-      ifelse(Antimicrobial == "Cefalothin", 
-             "Cephalothin", Antimicrobial
+    antimicrobial = 
+      ifelse(antimicrobial == "Cefalothin", 
+             "Cephalothin", antimicrobial
       )
   )
 
 
 raw_data<- raw_data%>%
   mutate(
-    Antimicrobial = 
-      ifelse(Antimicrobial == "Cephalotin", 
-             "Cephalothin", Antimicrobial
+    antimicrobial = 
+      ifelse(antimicrobial == "Cephalotin", 
+             "Cephalothin", antimicrobial
       )
   )
 
@@ -100,20 +109,20 @@ raw_data<- raw_data%>%
 
 raw_data<- raw_data%>%
   mutate(
-    Antimicrobial = 
-      ifelse(Antimicrobial == "Sulfisoxazole", 
-             "Sulfamethaxazole", Antimicrobial
+    antimicrobial = 
+      ifelse(antimicrobial == "Sulfisoxazole", 
+             "Sulfamethaxazole", antimicrobial
       )
   )
 
 
 raw_data %>%
-  count(Antimicrobial)%>%
+  count(antimicrobial)%>%
   view()
 
 ##cleaning antimicrobial compound
 raw_data %>%
-  count(`Antimicrobial compound`)%>%
+  count(antimicrobial)%>%
   view()
 
 
