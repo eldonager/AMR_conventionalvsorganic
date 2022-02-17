@@ -39,3 +39,4 @@ vignettes/*.pdf
 raw_data/
 # R Environment Variables
 .Renviron
+conv.csv/
