@@ -12,6 +12,10 @@ library(rnaturalearth)
 library(patchwork)
 library(cowplot)
 library(ggpubr)
+
+
+##spherical geometry turned off
+sf_use_s2(FALSE)
 ##loading data
 main_data <- read_csv("conv.csv", na = "empty")
 
@@ -72,15 +76,12 @@ conv4
 #Joining the data to add number of studies
 conv5 <- conv2 %>%
   left_join(conv4, by = "country")
-
-
 ##plotting the map
 #conv5 %>%
-  #mapview(zcol = "percent_resistant",
+ # mapview(zcol = "percent_resistant",
           #col.regions = viridisLite::plasma)
 
-##dropping geometry before ploting
-#conv5=st_drop_geometry(conv5)
+
 
 ##ploting
 #conv6 <- world %>% 
@@ -93,6 +94,8 @@ conv5 <- conv2 %>%
 #plot(conv6[, c("percent_resistant")])
 
 
+##dropping geometry before ploting
+#conv5=st_drop_geometry(conv5)
 
 
 
@@ -102,7 +105,8 @@ conv_plot <- tm_shape(conv5) +
               projection = 3857,
               title = "% resistance (conventional)",
               palette = "plasma") + tm_style("white") + 
-  tm_text("no_studies", size = 0.7)
+  tm_text("no_studies", size = 1)#+ #tmap_options(limits = c(facet.view =12)+ 
+                                                 # tm_facets(by = "country")
 conv_plot
 
 
@@ -156,7 +160,7 @@ org5 <- org2 %>%
 #mapview(zcol = "percent_resistant",
 #col.regions = viridisLite::plasma)
 
-##dropping geometry before ploting
+#dropping geometry before ploting
 #org5=st_drop_geometry(org5)
 
 ##ploting
@@ -183,9 +187,11 @@ org_plot <- tm_shape(org5) +
 org_plot
 
 
-
 ##Marging plots using patchwork
 
+conv_org_plot <- tmap_mode("plot")
+tmap_arrange(conv_plot, org_plot, widths = c(.25, .75))
+tmap_mode(conv_org_plot)
 
 
 
