@@ -47,11 +47,11 @@ raw_data %>%
   view()
 
 raw_data %>%
-  count(Sample_type)%>%
+  count(sample_type)%>%
   view()
 
 raw_data %>%
-  count(Host)%>%
+  count(host)%>%
   view()
 
 raw_data %>%
