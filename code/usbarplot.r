@@ -1,7 +1,7 @@
 library(tidyverse)
 library(dplyr)
 library(ggpubr)
-
+library(ggside)
 
 
 #Load data
@@ -37,17 +37,52 @@ usa_data <- main_data %>%
 
 
 
-p1 <- aggregate(percent_resistant~antimicrobial+author+country+locality+farm_type+
-                  sample_type+host+antimicrobial+
-            who_classification+pathogen+percent_resistant+
-    sampling_start_date, usa_data, mean) 
+usa_data1 <- aggregate(percent_resistant~host+farm_type+host+antimicrobial+
+            who_classification+percent_resistant, usa_data, mean) 
       
         
-   p1      
+       
          
-  p1 <- p1 %>%
-    relocate(host, .after = "antimicrobial")%>%
-    arrange(author)
+usa_data2<- usa_data1 %>%
+    relocate(antimicrobial, .after = "host")%>%
+  relocate(percent_resistant, .after = "who_classification")%>%
+  arrange(host)
+
+
+
+
+us_plot <- ggbarplot(usa_data2, "antimicrobial", "percent_resistant", 
+                     fill = "farm_type",
+          subtitle = "AMR of different antibiotics in the USA farms",
+          xlab = "Antimicrobial", ylab = "Percentage resistance",
+          legend.title = "Farm type", font.x = "bold", font.y = "bold",
+          font.legend = "bold", font.subtitle = "bold")+
+  rotate_x_text(90)
+
+facet(us_plot, facet.by = "host")
+
+us_plot+facet_wrap(host~who_classification, ncol =3)+ 
+  guides(guide_axis(check.overlap = T))
+
+##grouped bar
+
+
+us_plot <- ggbarplot(usa_data2, "antimicrobial", "percent_resistant", 
+                     fill = "farm_type", position = position_dodge(0.7),
+                     
+                     subtitle = "AMR of different antibiotics in the USA farms",
+                     xlab = "Antimicrobial", ylab = "Percentage resistance",
+                     legend.title = "Farm type", font.x = "bold", font.y = "bold",
+                     font.legend = "bold", font.subtitle = "bold"
+                    )+
+  rotate_x_text(90)
+
+facet(us_plot, facet.by = "host")
+
+us_plot+facet_wrap(host~who_classification, ncol =3)+ 
+  guides(guide_axis(check.overlap = T))
+
+
 
 
  

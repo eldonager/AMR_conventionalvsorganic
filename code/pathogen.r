@@ -4,7 +4,7 @@ library(dplyr)
 library(ggrepel)
 library(patchwork)
 #Load data
-main_data <- read_csv("conv.csv", na = "empty")
+main_data <- read_csv("conv.csv")
 
 #changing percentage resistance into numeric class and rounding off  
 main_data$percent_resistant <- as.numeric(as.character
