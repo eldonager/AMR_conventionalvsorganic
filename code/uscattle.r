@@ -2,6 +2,7 @@ library(tidyverse)
 library(dplyr)
 library(ggpubr)
 library(dplyr)
+library(patchwork)
 
 
 
@@ -39,6 +40,7 @@ usa_cattle <- main_data %>%
          "antimicrobial_compound",
          "who_classification",
          "pathogen",
+         "antimicrobial_class",
          
          "percent_resistant",
          
@@ -48,19 +50,58 @@ usa_cattle <- main_data %>%
   )
 
 
-usa_data1 <- aggregate(percent_resistant~host+farm_type+host+antimicrobial+
-                         who_classification+percent_resistant, usa_cattle, mean) 
+##USA cattle critically important
+
+usa_crit <- usa_cattle %>%
+  filter(who_classification == "Critically important")
 
 
-usa_data1$percent_resistant <- round(usa_data1$percent_resistant, digits = 0)
 
-##Stacked bar
-us_plot <- ggbarplot(usa_data1, "antimicrobial", "percent_resistant", 
-                     fill = "farm_type",
-                     subtitle = "AMR in cattle in the USA farms",
+usa_crit1 <- aggregate(percent_resistant~host+farm_type+host+antimicrobial+
+                         antimicrobial_class+antimicrobial_compound+
+                         who_classification+percent_resistant, usa_crit, mean) 
+
+
+usa_crit1$percent_resistant <- round(usa_crit1$percent_resistant, digits = 0)
+
+##grouped bar
+crit_plot <- ggbarplot(usa_crit1, "antimicrobial_compound", "percent_resistant", 
+                     fill = "farm_type", position = position_dodge(0.7),
+                     subtitle = "Critically important",
                      xlab = "Antimicrobial", ylab = "Percentage resistance",
                      legend.title = "Farm type", font.x = "bold", font.y = "bold",
                      font.legend = "bold", font.subtitle = "bold")+
-  rotate_x_text(90)
+  rotate_x_text(60)
 
-us_plot <- us_plot+facet_wrap(~who_classification)
+##Highly important
+
+
+usa_high <- usa_cattle %>%
+  filter(who_classification == "Highly important")
+
+
+
+usa_high1 <- aggregate(percent_resistant~host+farm_type+host+antimicrobial+
+                         antimicrobial_class+antimicrobial_compound+
+                         who_classification+percent_resistant, usa_high, mean) 
+
+
+usa_high1$percent_resistant <- round(usa_high1$percent_resistant, digits = 0)
+
+##grouped bar
+high_plot <- ggbarplot(usa_high1, "antimicrobial_compound", "percent_resistant", 
+                       fill = "farm_type", position = position_dodge(0.7),
+                       subtitle = "Highly important drugs",
+                       xlab = "Antimicrobial", ylab = "Percentage resistance",
+                       legend.title = "Farm type", font.x = "bold", font.y = "bold",
+                       font.legend = "bold", font.subtitle = "bold")+
+  rotate_x_text(60)
+
+
+
+p1 <- (crit_plot | high_plot) + plot_annotation(tag_levels = "a",
+                                              tag_prefix = "(",
+                                              tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = "bold"),
+        legend.position = "top")
