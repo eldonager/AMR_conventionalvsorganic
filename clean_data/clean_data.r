@@ -33,6 +33,10 @@ raw_data %>%
   count(country)%>%
   View()
 
+raw_data %>%
+  count(doi) %>%
+  View()
+
 
 raw_data %>%
   count(iso_3)%>%
@@ -57,6 +61,16 @@ raw_data %>%
 raw_data %>%
   count(antimicrobial)%>%
   view()
+
+##Cleaning farm type colunm
+raw_data<- raw_data%>%
+  mutate(
+    farm_type = 
+      ifelse(farm_type == "Convetional", 
+             "Conventional", farm_type
+      )
+  )
+
 
 #Cleaning antimicrobials colunm
 
@@ -110,11 +124,67 @@ raw_data<- raw_data%>%
 raw_data<- raw_data%>%
   mutate(
     antimicrobial = 
-      ifelse(antimicrobial == "Sulfisoxazole", 
-             "Sulfamethaxazole", antimicrobial
+      ifelse(antimicrobial == "Chloramphenicol", 
+             "Chloromphenicol", antimicrobial
       )
   )
 
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial = 
+      ifelse(antimicrobial == "Gentamicin", 
+             "Gentamycin", antimicrobial
+      )
+  )
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial = 
+      ifelse(antimicrobial == "Quinupristin-dalfopristin", 
+             "Quinopristin-dalfopristin", antimicrobial
+      )
+  )
+
+
+##cleaning antimicrobial class colunm
+
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_class = 
+      ifelse(antimicrobial_class == "1st_gen cephalosporn", 
+             "1st_gen cephalosporin", antimicrobial_class
+      )
+  )
+
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_class = 
+      ifelse(antimicrobial_class == "Glycopeptide", 
+             "Glycopeptides", antimicrobial_class
+      )
+  )
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_class = 
+      ifelse(antimicrobial_class == "Lincosamide", 
+             "Lincosamides", antimicrobial_class
+      )
+  )
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_class = 
+      ifelse(antimicrobial_class == "Polymyxin", 
+             "Polymyxins", antimicrobial_class
+      )
+  )
+
+raw_data %>%
+  count(antimicrobial_class)%>%
+  view()
 
 raw_data %>%
   count(antimicrobial)%>%
