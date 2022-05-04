@@ -67,12 +67,17 @@ usa_crit1$percent_resistant <- round(usa_crit1$percent_resistant, digits = 0)
 ##grouped bar
 crit_plot <- ggbarplot(usa_crit1, "antimicrobial_compound", "percent_resistant", 
                      fill = "farm_type", position = position_dodge(0.7),
-                     subtitle = "Critically important",
+                     
                      xlab = "Antimicrobial", ylab = "Percentage resistance",
-                     legend.title = "Farm type", font.x = "bold", font.y = "bold",
-                     font.legend = "bold", font.subtitle = "bold")+
-  rotate_x_text(60)
-
+                     legend.title = "Farm type") +
+  theme_classic2()+ theme_pubr(base_size = 12,
+                               base_family = "",
+                               border = FALSE,
+                               margin = TRUE,
+                               legend = c("top"),
+                               x.text.angle = 60)+ labs_pubr()
+  
+ 
 ##Highly important
 
 
@@ -91,12 +96,15 @@ usa_high1$percent_resistant <- round(usa_high1$percent_resistant, digits = 0)
 ##grouped bar
 high_plot <- ggbarplot(usa_high1, "antimicrobial_compound", "percent_resistant", 
                        fill = "farm_type", position = position_dodge(0.7),
-                       subtitle = "Highly important drugs",
+                       
                        xlab = "Antimicrobial", ylab = "Percentage resistance",
-                       legend.title = "Farm type", font.x = "bold", font.y = "bold",
-                       font.legend = "bold", font.subtitle = "bold")+
-  rotate_x_text(60)
-
+                       legend.title = "Farm type") +
+  theme_classic2()+ theme_pubr(base_size = 12,
+                               base_family = "",
+                               border = FALSE,
+                               margin = TRUE,
+                               legend = c("top"),
+                               x.text.angle = 60)+ labs_pubr()
 
 
 p1 <- (crit_plot | high_plot) + plot_annotation(tag_levels = "a",
@@ -105,3 +113,17 @@ p1 <- (crit_plot | high_plot) + plot_annotation(tag_levels = "a",
   plot_layout(guides = "collect")&
   theme(plot.tag = element_text(face = "bold"),
         legend.position = "top")
+
+##saving plot
+ggsave("p1.png", p1, height = 10, width = 12, dpi = 600)
+
+
+## drug names and acronyms
+drug.names <- usa_cattle %>%
+ select(antimicrobial, antimicrobial_compound, antimicrobial_class,
+        who_classification)%>%
+  unique()
+drug.names
+
+write.table(drug.names, file = "drug names and acronyms.csv",
+            sep = ",", quote = FALSE, row.names = F)

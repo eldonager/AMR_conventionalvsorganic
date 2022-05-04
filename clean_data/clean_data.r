@@ -62,6 +62,28 @@ raw_data %>%
   count(antimicrobial)%>%
   view()
 
+##cleaning host colunm
+
+raw_data<- raw_data%>%
+  mutate(
+    host = 
+      ifelse(host == "Cows and Calves", 
+             "Cattle", host
+      )
+  )
+
+
+raw_data<- raw_data%>%
+  mutate(
+    host = 
+      ifelse(host == "Cows and Calves", 
+             "Cattle", host
+      )
+  )
+
+
+
+
 ##Cleaning farm type colunm
 raw_data<- raw_data%>%
   mutate(

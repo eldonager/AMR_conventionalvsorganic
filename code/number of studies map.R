@@ -12,7 +12,8 @@ library(rnaturalearth)
 
 main_data <- read_csv("conv.csv")
 
-
+##spherical geometry turned off
+sf_use_s2(FALSE)
 ##sf_package
 world <- ne_countries(type = 'countries', 
                       scale = 'small', 
@@ -48,5 +49,6 @@ p5 <- tm_shape(p4) +
               n = 5,
               projection = 3857,
               title = "number of studies",
-              palette = "plasma") + tm_style("white")
+              pallete = "Blues") + tm_style("gray")+
+  tmap_options(check.and.fix = TRUE)
 p5

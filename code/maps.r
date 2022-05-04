@@ -10,14 +10,14 @@ library(RColorBrewer)
 library(mapview)
 library(rnaturalearth)
 library(patchwork)
-library(cowplot)
-library(ggpubr)
+
+library(ggforce)
 
 
 ##spherical geometry turned off
 sf_use_s2(FALSE)
 ##loading data
-main_data <- read_csv("conv.csv", na = "empty")
+main_data <- read_csv("conv.csv")
 
 
 #changing percentage resistance into numeric class and rounding off  
@@ -31,10 +31,15 @@ world <- ne_countries(type = 'countries',
                       scale = 'small', 
                       returnclass = "sf") 
 
+##Counting countries in the data set
+main_data %>%
+  count(country)%>%
+  View()
+
+
 
 ### plotting AMR in conventional farms
   
-
 conv_data <- main_data%>%
   group_by(country) %>%
   filter(farm_type == "Conventional") %>%
@@ -53,8 +58,7 @@ conv1 <- conv_data %>%
 ##joining the data set to the world data
 conv2 <- world %>%
   filter(continent != "Antarctica", continent !="Greenland",
-         continent !="Africa", continent !="South America",
-         continent !="Australia") %>%
+         continent !="Africa") %>%
   select(country = sovereignt, geometry, iso_a3) %>%
   left_join(conv1, by = "country")
 
@@ -101,15 +105,12 @@ conv5 <- conv2 %>%
 
 conv_plot <- tm_shape(conv5) + 
   tm_polygons(col = "percent_resistant",  
-              n = 8,
+              n = 4,
               projection = 3857,
               title = "% resistance (conventional)",
               palette = "plasma") + tm_style("white") + 
-  tm_text("no_studies", size = 1)#+ #tmap_options(limits = c(facet.view =12)+ 
-                                                 # tm_facets(by = "country")
-conv_plot
-
-
+  tm_text("iso_a3", size = 0.45) 
+ conv_plot 
 
 ##Plotting AMR in conventional farms
 org_data <- main_data%>%
@@ -130,9 +131,8 @@ org1 <- org_data %>%
 ##joining the data set to the world data
 org2 <- world %>%
   filter(continent != "Antarctica", continent !="Greenland",
-         continent !="Africa", continent !="South America",
-         continent !="Australia") %>%
-  select(country = sovereignt, geometry, iso_n3) %>%
+         continent !="Africa") %>%
+  select(country = sovereignt, geometry, iso_a3) %>%
   left_join(org1, by = "country")
 
 ##Adding number of studies to the dataset
@@ -179,11 +179,11 @@ org5 <- org2 %>%
 
 org_plot <- tm_shape(org5) + 
   tm_polygons(col = "percent_resistant",  
-              n = 8,
+              n = 4,
               projection = 3857,
               title = "% resistance (Organic)",
               palette = "plasma") + tm_style("white") + 
-  tm_text("no_studies", size = 0.7)
+  tm_text("iso_a3", size = 0.45)
 org_plot
 
 
