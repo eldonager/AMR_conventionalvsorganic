@@ -50,5 +50,6 @@ p5 <- tm_shape(p4) +
               projection = 3857,
               title = "number of studies",
               pallete = "Blues") + tm_style("gray")+
+  tm_text("iso_a3", size = 0.45)
   tmap_options(check.and.fix = TRUE)
 p5

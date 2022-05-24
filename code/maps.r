@@ -10,7 +10,6 @@ library(RColorBrewer)
 library(mapview)
 library(rnaturalearth)
 library(patchwork)
-
 library(ggforce)
 
 
@@ -24,7 +23,7 @@ main_data <- read_csv("conv.csv")
 main_data$percent_resistant <- as.numeric(as.character
                                           (main_data$percent_resistant))
 
-main_data$percent_resistant <- round(main_data$percent_resistant, digits = 2)
+main_data$percent_resistant <- round(main_data$percent_resistant, digits = 0)
 
 ##sf_package
 world <- ne_countries(type = 'countries', 
@@ -112,7 +111,7 @@ conv_plot <- tm_shape(conv5) +
   tm_text("iso_a3", size = 0.45) 
  conv_plot 
 
-##Plotting AMR in conventional farms
+##Plotting AMR in Organic farms
 org_data <- main_data%>%
   group_by(country) %>%
   filter(farm_type == "Organic") %>%
