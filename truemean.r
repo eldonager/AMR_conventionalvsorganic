@@ -1542,3 +1542,9 @@ mean.data <- rbind(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,
 
 mean.data1 <- mean.data%>%
   filter(mean<=100)
+
+
+
+###Exporting data to csv file in the conv folder
+write.table(mean.data1, file = "mean.data.csv", row.names = FALSE,
+            sep = ",")
