@@ -50,6 +50,7 @@ Organic.data <- data3 %>%
 ##Organic farm raincloud plots
 
 
+
 org.plot<-ggplot(Organic.data, aes(x = host, y = percent_resistant, fill = host))+
                         
   ggdist::stat_halfeye(
@@ -73,13 +74,18 @@ org.plot<-ggplot(Organic.data, aes(x = host, y = percent_resistant, fill = host)
     alpha = .3
   ) + scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
   coord_cartesian(xlim = c(1.2, NA), clip = "off")+
+ 
   theme_pubr()
+
+##Changing x axis label order
+org.plot <- org.plot + scale_x_discrete(name ="host", 
+                     limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
 
 org.1 <-org.plot+labs(x = "Host", y = "Percent resistance", 
                      title = "Organic farms")+
   theme(legend.position = "none")
               
-
+org.1
 
 ##Conventional plots
 
@@ -115,15 +121,21 @@ conv.plot<-ggplot(conv.data, aes(x = host, y = percent_resistant, fill = host))+
   coord_cartesian(xlim = c(1.2, NA), clip = "off")+
   theme_pubr()
 
+##Changing x axis label order
+conv.plot <- conv.plot + scale_x_discrete(name ="host", 
+                                        limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
+
+
+
 conv.1<- conv.plot+labs(x = "Host", y = "Percent resistance",
                         title = "Conventional farms")+
   theme(legend.position = "none")
 
-
+conv.1
 
 ##Merge pathogen plots
 
-host.plot <- (org.1 /conv.1)+ 
+host.plot <- (org.1 |conv.1)+ 
   plot_annotation(tag_levels = "a",
                   tag_prefix = "(",
                   tag_suffix = ")")+
