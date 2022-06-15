@@ -205,6 +205,23 @@ raw_data<- raw_data%>%
       )
   )
 
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_class = 
+      ifelse(antimicrobial_class == "Sulfisoxazole", 
+             "Sulfamethaxazole", antimicrobial_class ))
+
+
+raw_data<- raw_data%>%
+  mutate(
+    antimicrobial_compound = 
+      ifelse(antimicrobial_compound == "PIT", 
+             "PIP", antimicrobial_compound ))
+
+
+
+
 raw_data %>%
   count(antimicrobial_class)%>%
   view()

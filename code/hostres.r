@@ -6,7 +6,7 @@ library(patchwork)
 library(wesanderson)
 library(ggpubr)
 #Load data
-main_data <- read_csv("conv.csv")
+main_data <- read_csv("mean.data.csv")
 
 #changing percentage resistance into numeric class and rounding off  
 main_data$percent_resistant <- as.numeric(as.character
@@ -140,7 +140,7 @@ host.plot <- (org.1 |conv.1)+
                   tag_prefix = "(",
                   tag_suffix = ")")+
   plot_layout(guides = "keep")&
-  theme(plot.tag = element_text(face = "bold"),
+  theme(plot.tag = element_text(),
         legend.position = "top")
 
 

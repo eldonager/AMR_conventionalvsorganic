@@ -1,0 +1,114 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Antimicrobial Resistance in Organic and Conventional farms: A sytemic literature review},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{setspace}
+\doublespacing
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Antimicrobial Resistance in Organic and Conventional farms: A
+sytemic literature review}
+\author{}
+\date{\vspace{-2.5em}May 26, 2022}
+
+\begin{document}
+\maketitle
+
+\hypertarget{results}{%
+\subsubsection{Results}\label{results}}
+
+We identified 1836 references in three search databases: Pub Med, Web of
+Science, and PubAg, from studies published between 2000 and 2022. The
+studies reported the point prevalence of antimicrobial resistance in
+Organic and Conventional farms. Three duplicates were removed, and the
+remaining 1833 unique references were subjected to relevance screening,
+with 1744 references being removed. After assessing the remaining 89
+references for eligibility, 17 were removed. The systematic review
+included 72 studies that met our criteria (\emph{fig.1}). The United
+States of America accounted for 44\% (n=32) of the surveys. Italy,
+Germany and Spain accounted for 5 surveys each, Sweden had 4 surveys
+while the remaining countries contributed between 3 and 1 survey each.
+
+\hypertarget{antimicrobial-resistance-trends-in-organic-and-conventional-farms}{%
+\paragraph{Antimicrobial resistance trends in Organic and conventional
+farms}\label{antimicrobial-resistance-trends-in-organic-and-conventional-farms}}
+
+There was higher resistance in conventional farms as compared to organic
+farms between 2001 and 2020 except in 2016 where the median resistance
+in organic farms was higher than in conventional farms. The median
+resistance decreased from 43\%-8\% in organic farms between 2016-2020
+then increased to 22\% in 2020.The same trend was observed in
+conventional farms where the median resistance decreased from 35\% to
+18\% between 2016 and 2019, then sharply increased to 38\% in 2020.
+
+\includegraphics{AMR-manuscript_files/figure-latex/trends-1.pdf}
+
+\hypertarget{including-plots}{%
+\subsection{Including Plots}\label{including-plots}}
+
+You can also embed plots, for example:
+
+\includegraphics{AMR-manuscript_files/figure-latex/pressure-1.pdf}
+
+Note that the \texttt{echo\ =\ FALSE} parameter was added to the code
+chunk to prevent printing of the R code that generated the plot.
+
+\end{document}

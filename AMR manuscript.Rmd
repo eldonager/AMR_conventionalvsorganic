@@ -1,9 +1,252 @@
+---
+title: "Antimicrobial Resistance in Organic and Conventional farms: A sytemic literature review"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r load-packages, include=FALSE}
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(ggpubr)
 library(patchwork)
+library(scales)
+library(wesanderson)
+library(ggpubr)
 
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Results
+
+
+We identified 1836 references in three search databases: Pub Med, Web of Science, and PubAg, from studies published between 2000 and 2022.  The studies reported the point prevalence of antimicrobial resistance in Organic and Conventional farms. Three duplicates were removed, and the remaining 1833 unique references were subjected to relevance screening, with 1744 references being removed. After assessing the remaining 89 references for eligibility, 17 were removed. The systematic review included 72 studies that met our criteria (*fig.1*). The United States of America accounted for 44% (n=32) of the surveys. Italy, Germany and Spain accounted for 5 surveys each, Sweden had 4 surveys while the remaining countries contributed between 3 and 1 survey each.
+
+
+#### Antimicrobial resistance trends in Organic and conventional farms
+
+There was higher resistance in conventional farms as compared to organic farms between 2001 and 2020 except in 2016 where the resistance in organic farms was higher than in conventional farms. The resistance decreased from 43%-8% in organic farms between 2016-2020 then increased to 22% in 2020.The same trend was observed in conventional farms where the resistance decreased from 35% to 18% between 2016 and 2019, then sharply increased to 38% in 2020 (*fig.2*)
+
+
+
+```{r trends, echo=FALSE, fig.height=6, fig.width=14, message=FALSE}
+
+main_data <- read_csv("mean.data.csv")
+
+data1 <- main_data %>%
+  select("antimicrobial", "doi", "antimicrobial_compound",
+         "farm_type",
+          
+         "sampling_end_date", "mean")
+
+
+data2 <- filter(data1, !is.na(data1$sampling_end_date))
+ 
+
+
+data3 <-aggregate(mean~doi+farm_type+sampling_end_date, data2, mean)
+
+
+
+data3$mean <- as.numeric(as.character(data3$mean))
+
+data3$mean <- round(data3$mean, digits = 0)
+
+data3<- data3[which(data3$mean>= 1),]
+
+
+
+
+
+organic.data<- data3 %>%
+  filter(farm_type == "Organic")
+   
+        
+
+
+organic.p1<-ggboxplot(organic.data, "sampling_end_date", "mean", fill = "farm_type",
+        xlab = "Year", ylab = "Percent resistance", 
+           palette = c("#00AFBB")) +
+  geom_boxplot(fill = "#00AFBB")+
+  rotate_x_text(60)
+
+organic.plot <-ggpar(organic.p1, legend.title = "Farm type")
+
+
+
+conv.data<- data3 %>%
+  filter(farm_type == "Conventional")
+
+
+
+
+conv.p1<-ggboxplot(conv.data, "sampling_end_date", "mean", fill = "farm_type",
+                      xlab = "Year", ylab = "Percent resistance", 
+                      palette = c("#FC4E07")) +
+  geom_boxplot(fill = "#FC4E07") +
+  rotate_x_text(60)
+
+conv.plot <-ggpar(conv.p1, legend.title = "Farm type")
+
+
+
+
+
+trend.plot <- (organic.plot | conv.plot)+ 
+  plot_annotation(tag_levels = "a",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "keep")&
+  theme(plot.tag = element_text(),
+        legend.position = "top")
+plot(trend.plot)
+```
+
+
+#### Host resistance
+
+
+In conventional farms, cattle, chicken, pigs, turkeys, and environments were represented by 14, 27, 16, 1 and 6 studies respectively while in organic farms, cattle, chicken, pigs, turkeys and environments were represented by 15, 32, 13, 2 and 5 studies respectively. There was higher resistance in conventional farms as compared to organic farms in cattle, chicken, pigs, and turkeys except in the environment where there was higher resistance in organic farms as compared to the conventional farms. In conventional farms, the resistance was 14.5% in cattle, 22% in chicken, 11.5% in environment, 24.5% in pigs and 46% in turkeys while the resistance rate in organic farms was 9% in cattle, 13.5% in chicken, 16% in environment, 15% in pigs and 22.5% in turkeys. 
+
+
+
+
+```{r host,echo=FALSE, fig.height=6, fig.width=14, message=FALSE}
+main_data <- read_csv("mean.data.csv")
+
+#changing percentage resistance into numeric class and rounding off  
+main_data$percent_resistant <- as.numeric(as.character
+                                          (main_data$percent_resistant))
+
+main_data$percent_resistant <- round(main_data$percent_resistant, digits = 0)
+
+
+data2 <- main_data %>%
+  group_by(host) %>%
+  select("doi",
+         "farm_type",
+        "host",
+        "percent_resistant")
+         
+         
+
+
+
+
+
+data3 <-aggregate(percent_resistant~doi+farm_type+host, data2, mean)
+
+
+
+#changing percentage resistance into numeric class and rounding off  
+data3$percent_resistant <- as.numeric(as.character
+                                      (data3$percent_resistant))
+
+data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
+
+data3<- data3[which(data3$percent_resistant>= 1),]
+
+#subseting organic farm data
+Organic.data <- data3 %>%
+  filter(farm_type == "Organic")
+
+
+##Organic farm raincloud plots
+
+
+
+org.plot<-ggplot(Organic.data, aes(x = host, y = percent_resistant, fill = host))+ 
+  geom_boxplot(
+    width = .15, 
+    outlier.shape = NA
+  ) +
+ 
+  scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  coord_cartesian(xlim = c(1.2, NA), clip = "off")+
+ 
+  theme_pubr()
+
+##Changing x axis label order
+org.plot <- org.plot + scale_x_discrete(name ="host", 
+                     limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
+
+org.1 <-org.plot+labs(x = "Host", y = "Percent resistance", 
+                     title = "Organic farms")+
+  theme(legend.position = "none")
+              
+
+
+##Conventional plots
+
+#subseting conventionalfarm data
+
+conv.data <- data3 %>%
+  filter(farm_type == "Conventional")
+
+
+
+conv.plot<-ggplot(conv.data, aes(x = host, y = percent_resistant, fill = host))+
+  
+  geom_boxplot(
+    width = .15, 
+    outlier.shape = NA
+  ) +
+   scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  coord_cartesian(xlim = c(1.2, NA), clip = "off")+
+  theme_pubr()
+
+##Changing x axis label order
+conv.plot <- conv.plot + scale_x_discrete(name ="host", 
+                                        limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
+
+
+
+conv.1<- conv.plot+labs(x = "Host", y = "Percent resistance",
+                        title = "Conventional farms")+
+  theme(legend.position = "none")
+
+
+
+##Merge pathogen plots
+
+host.plot <- (org.1 |conv.1)+ 
+  plot_annotation(tag_levels = "a",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "keep")&
+  theme(plot.tag = element_text(),
+        legend.position = "top")
+
+
+host.plot
+
+
+```
+Figure 2
+
+
+
+
+
+#### Foodborne pathogen resistance
+
+
+Most of the surveys covered antimicrobials classified as critically important for human medicine by the World Health Organization (WHO, 2019). Our study covered 350,570 isolates from organic and conventional farms in Asia, Oceania, Europe, South America and North America testing resistance of Escherichia coli, Salmonella, Campylobacter, and Staphylococcus aureus.
+
+The resistance in E. coli isolates in conventional farms was higher than in organic farms. There was higher resistance of amoxicillin-clavulanic acid (AMC) in Asia, 98%, (CI:95-100%) in both conventional and organic farms as compared to 32%, (CI:29-35%) and 20%, (CI:18-22%) in European conventional and organic farms respectively. In South America, the resistance of E. coli against AMC was 23%, (CI:16-30%) in organic farms while the resistance was lower in the North American organic farms at 3%. North America reported higher resistances in erythromycin 76%, (CI:73-79%) in conventional farms and 56%, (CI: 53-59%) in organic farms. Tylosin resistance was 64%, (CI:60-68%) and 36%, (CI: 32-40%) in conventional and organic farms respectively. Neomycin resistance was 63%, (CI:59-67%) in conventional and 24%, (CI:21-27%) in organic farms in North America while the resistance rate was 2%, (CI: 1-3%) in organic farms in Oceania.  
+
+The resistance was higher in salmonella in Asia as compared to North America. Resistance of ampicillin in salmonella in Asia was 52%, (CI:47-57%) and 23%, (CI: 19-27%) in conventional and organic farms respectively while in North America the resistance was 22%, (CI: 21-23%) and 18%, (CI: 16-20%) in conventional and organic farms respectively. The salmonella resistance against streptomycin was 46%, (CI: 40-52%) and 21%, (CI: 17-25%) in conventional and organic farms respectively in Asia, while in North America, the streptomycin resistance against salmonella was 20%, (CI:19-21%) and 10%, (CI: 9-11%) in conventional and organic farms respectively. Gentamycin resistance was higher in conventional farms 31%, (CI: 27-35%) as compared to organic farms 4%, (CI: 2-6%) in Asia while in North America there was no significant difference between resistances in organic farms, 3%, (CI: 2-4%) and conventional farms 4%, (CI:3-5%). This was the same case in amoxicillin-clavulanic acid in North America where resistance in conventional farms was 23%, (CI: 21-25%) and 24%, (CI: 22-26%). However, there was a significant difference in amoxicillin-clavulanic acid resistance in Asia where organic farms had 6%, (CI: 3-9%) as compared to 19%, (CI: 15-23%).
+
+In Europe, campylobacter had a higher resistance in norfloxacin, ofloxacin and ampicillin in organic farms with resistance rates of 91% (CI: 82-100%), 91% (CI: 82-100%) and 79% (CI: 67-91%) respectively. However, ampicillin recorded lower resistance rates than in conventional farms 66% (CI: 51-81%) as compared to organic farms. Ciprofloxacin resistance was lower in North America, 2% in organic farms as compared to 11% (CI: 10-12%) in organic and conventional farms respectively as compared to Europe 30% (CI: 27-33%) and 36% (32-40%) in organic and conventional farms respectively. Nalidixic acid resistance was higher in Europe as compared to North America in conventional and organic farms with resistance percentages of 31% (CI: 27-35%) and 35% (CI: 31-39%) in organic and conventional farms respectively as compared to 5% (CI: 4-6%) and 12% (CI: 11-13%) in organic and conventional farms respectively in North America.
+
+Europe, North America, and Asia recorded the same resistance of erythromycin in enterococcus, 17% in organic farms. However, the resistance was higher in conventional farms as compared to organic farms. Oceania had a higher resistance of ciprofloxacin in conventional farms at 84% (CI: 80-88%) as compared to Asia, North America and Europe which recorded 31% (CI: 18-44%), 18% (13-23%) and 11% (CI: 7-15%) respectively. Europe however had higher resistance against Staphylococcus aureus in conventional farms 75% (CI: 67-83%) as compared to 38% (CI: 29-47%) in organic farms. Overall, the erythromycin resistance was lower in organic farms in Europe and North America with resistances of 10% (CI: 7-13%) and 6% (CI: 3-9%) respectively.
+
+
+```{r continents,echo=FALSE, fig.height=15, fig.width=17, message=FALSE}
 #Load data
 main_data <- read_csv("conv.csv")
 
@@ -1038,6 +1281,294 @@ continent_plot1 <- (asia.ecoli.plot | europe.ecoli.plot | N.A.ecoli.plot | S.A.e
 
 continent_plot1
 
-ggsave(filename = "continents.png",continent_plot1)
+
+```
+
+#### Antimicrobial class resistance at the country level
 
 
+
+China had a higher resistance to macrolide, a critically important antimicrobial to human medicine in organic and conventional farms at 97% (CI: 94-100%) and 100% respectively as compared to the United States of America which recorded 21% CI (20-11%) and 33% CI: (32-34%) in organic and conventional farms respectively. Tetracycline antibiotic class had lower resistance rates in both organic and conventional farms by 15% (CI: 14-16%) in Sweden as compared to the United States of America with 55% (CI: 54-56%) and 38% (CI: 37-39%) in conventional and organic farms respectively. China had the highest sulfonamide resistance in conventional farms, 31% (25-37%) and the lowest sulfonamide resistance in organic farms, 2% CI: (0-4%) as compared to other countries while both USA and Sweden reported the lowest resistance rate in organic farms at 11%.
+
+
+```{r country,echo=FALSE, fig.height=15, fig.width=17, message=FALSE}
+
+#Load data
+main_data <- read_csv("conv.csv")
+
+
+
+
+
+
+
+
+
+
+data1 <- main_data %>%
+  group_by(country) %>%
+  select("country",
+         "doi",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+         "no_isolates_resistant",
+         "no_isolates_susceptible",
+         "no_isolates_intermidiate",
+         "no_isolates" )
+
+#changing percentage resistance into numeric class and rounding off  
+data1$percent_resistant <- as.numeric(as.character
+                                      (data1$percent_resistant))
+
+data1$percent_resistant <- round(data1$percent_resistant, digits = 0)
+
+data2 <- data1 %>%
+  select("doi",
+         "country",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+         "no_isolates_resistant",
+         "no_isolates_susceptible",
+         "no_isolates_intermidiate",
+         "no_isolates" )
+
+
+
+data3 <- aggregate(percent_resistant~antimicrobial_class+doi+pathogen+host+country+
+                     farm_type+no_isolates,
+                   data2, mean)
+
+
+
+data3 <- data3 %>%select("country",
+                         "doi",
+                         "farm_type",
+                         "host",
+                         "antimicrobial_class",
+                         "pathogen",
+                         "percent_resistant", "no_isolates")%>%
+  filter(pathogen != "Arcanobacterium pyogenes", pathogen != "Corynebacterium bovis",
+         pathogen != "Environmental streptococci")
+
+
+#changing percentage resistance into numeric class and rounding off  
+data3$percent_resistant <- as.numeric(as.character
+                                      (data3$percent_resistant))
+
+data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
+
+
+
+data3 %>%
+  count(country)%>%
+  view()
+
+usa<- data3
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsousa <- mapply(new.function1, usa$percent_resistant, usa$no_isolates)
+ResIsousa <- round(ResIsousa, digits = 0)
+AMR.tmp.usa <- cbind(usa, ResIsousa)
+
+#determine total NIsolates
+usaNIsolates <- aggregate(no_isolates ~ doi + country + farm_type + 
+                              antimicrobial_class + pathogen + percent_resistant+
+                              ResIsousa, data = AMR.tmp.usa, FUN = unique)
+
+
+usaNIsolates$no_isolates <- sapply(usaNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+usares <- aggregate(ResIsousa ~ antimicrobial_class  + farm_type+
+                        country, 
+                      data = AMR.tmp.usa, FUN = sum)
+usaAll <- aggregate(no_isolates ~ antimicrobial_class  + farm_type+
+                        country, 
+                      data = AMR.tmp.usa, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+usaMean <- round((usares$ResIsousa /usaAll$no_isolates)*100, digits = 0)
+usaMeanDF <- as.data.frame(cbind(usares$antimicrobial_class,
+                                   usares$farm_type, usares$country,
+                                  usaMean, usaAll$no_isolates))
+colnames(usaMeanDF) <- c("antimicrobial_class","farm_type","country",
+                           "Mean","no_isolates")
+usaMeanDF$Mean <- as.numeric(as.character(usaMeanDF$Mean))
+usaMeanDF$no_isolates <- as.numeric(as.character(usaMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+usaMeanDF = usaMeanDF[which(usaMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIusa<- as.data.frame(t(mapply(CI.function, usaMeanDF$Mean/100, usaMeanDF$no_isolates)))
+usaMeanDF <-cbind(usaMeanDF, round(CIusa*100, digits = 0))
+colnames(usaMeanDF) <- c("antimicrobial_class", "farm_type","country",
+                           "Mean","no_isolates","CILow","CIHigh")
+usaMeanDF$CILow[usaMeanDF$CILow < 0] = 0
+usaMeanDF$CIHigh[usaMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+usaMeanDF <- usaMeanDF%>%
+  filter(Mean>1)
+
+country.data <- usaMeanDF
+
+##usa bar plot
+usa.1 <- usaMeanDF %>%
+  filter(country == "United States of America")
+
+usa.1<- usa.1[order(-usa.1$Mean), ]
+
+usa.bar <- ggbarplot(usa.1, "antimicrobial_class", "Mean", 
+                               fill = "farm_type", position = position_dodge(0.7),
+                               subtitle = "USA, n= 320,864",
+                               xlab = FALSE, ylab = FALSE,
+                               legend.title = "Farm type",
+                               font.subtitle = "italic")+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+##Denmark plot
+
+den.1 <- usaMeanDF %>%
+  filter(country == "Denmark")
+
+den.1<- den.1[order(-den.1$Mean), ]
+
+den.bar <- ggbarplot(den.1, "antimicrobial_class", "Mean", 
+                     fill = "farm_type", position = position_dodge(0.7),
+                     subtitle = "Denmark, n= 468 ",
+                     xlab = FALSE, ylab = FALSE,
+                     legend.title = "Farm type",
+                     font.subtitle = "italic")+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+
+##Sweden bar plot
+
+swe.1 <- usaMeanDF %>%
+  filter(country == "Sweden")
+
+swe.1<- swe.1[order(-swe.1$Mean), ]
+
+sweden.bar <- ggbarplot(swe.1, "antimicrobial_class", "Mean", 
+                     fill = "farm_type", position = position_dodge(0.7),
+                     subtitle = "Sweden, n= 28,259 ",
+                     xlab = FALSE, ylab = FALSE,
+                     legend.title = "Farm type",
+                     font.subtitle = "italic")+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+
+##South kores bar plot
+
+s.k1 <- usaMeanDF %>%
+  filter(country == "South Korea")
+
+s.k1<- s.k1[order(-s.k1$Mean), ]
+
+Southkorea.bar <- ggbarplot(s.k1, "antimicrobial_class", "Mean", 
+                        fill = "farm_type", position = position_dodge(0.7),
+                        subtitle = "South Korea, n= 2,382",
+                        xlab = FALSE, ylab = FALSE,
+                        legend.title = "Farm type",
+                        font.subtitle = "italic")+
+  rotate_x_text(60)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+##China bar plot
+
+china.1 <- usaMeanDF %>%
+  filter(country == "China")
+
+china.1<- china.1[order(-china.1$Mean), ]
+
+china.bar <- ggbarplot(china.1, "antimicrobial_class", "Mean", 
+                            fill = "farm_type", position = position_dodge(0.7),
+                            subtitle = "China, n= 3,544",
+                            xlab = FALSE, ylab = FALSE,
+                            legend.title = "Farm type",
+                            font.subtitle = "italic")+
+  rotate_x_text(60)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+
+
+##Germany bar plot
+
+ger.1 <- usaMeanDF %>%
+  filter(country == "Germany")
+
+ger.1<- ger.1[order(-ger.1$Mean), ]
+
+germany.bar <- ggbarplot(ger.1, "antimicrobial_class", "Mean", 
+                       fill = "farm_type", position = position_dodge(0.7),
+                       subtitle = "Germany, n= 17,808",
+                       xlab = FALSE, ylab = FALSE,
+                       legend.title = "Farm type",
+                       font.subtitle = "italic")+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))
+
+
+
+
+
+
+
+
+##Putting all plots together using patchwork
+
+country.plot <- (usa.bar | germany.bar | Southkorea.bar) / 
+  (sweden.bar | den.bar | china.bar)+
+  plot_annotation(tag_levels = "a",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = "italic"),
+        legend.position = "top")
+
+
+country.plot
+```
+
+
+#### Geography of resistance
+
+
+**To be added when maps are ready**
