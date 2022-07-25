@@ -22,6 +22,8 @@ data3 <- data2 %>%
 data4<- data3 %>%
   count(continent, year)
 
+
+
 p1<- ggbarplot(data4, "year", 
           "n", 
           fill = "continent",
