@@ -226,6 +226,13 @@ raw_data %>%
   count(antimicrobial_class)%>%
   view()
 
+
+raw_data %>%
+  count(mode_of_action)%>%
+  view()
+
+
+
 raw_data %>%
   count(antimicrobial)%>%
   view()
