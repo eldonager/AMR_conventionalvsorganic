@@ -7,15 +7,6 @@ library(patchwork)
 #Load data
 main_data <- read_csv("conv.csv")
 
-
-
-
-
-
-
-
-
-
 data1 <- main_data %>%
   group_by(country) %>%
   select("country",
@@ -53,13 +44,10 @@ data2 <- data1 %>%
 
 
 
-data3 <- aggregate(percent_resistant~antimicrobial_class+doi+pathogen+host+country+
-                     farm_type+no_isolates,
-                   data2, mean)
 
 
 
-data3 <- data3 %>%select("country",
+data3 <- data2 %>%select("country",
                          "doi",
                          "farm_type",
                          "host",
@@ -78,9 +66,6 @@ data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
 
 
 
-data3 %>%
-  count(country)%>%
-  view()
 
 usa<- data3
 #create a function to return the number of resistant isolates
@@ -94,7 +79,7 @@ AMR.tmp.usa <- cbind(usa, ResIsousa)
 #determine total NIsolates
 usaNIsolates <- aggregate(no_isolates ~ doi + country + farm_type + 
                               antimicrobial_class + pathogen + percent_resistant+
-                              ResIsousa, data = AMR.tmp.usa, FUN = unique)
+                              ResIsousa, data = AMR.tmp.usa, FUN = sum)
 
 
 usaNIsolates$no_isolates <- sapply(usaNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -136,6 +121,15 @@ usaMeanDF <- usaMeanDF%>%
 
 country.data <- usaMeanDF
 
+
+
+df1 <- AMR.tmp.usa %>%
+  filter(country == "United States of America")%>%
+  select(doi, no_isolates) %>%
+  unique()
+
+df1 <- aggregate(no_isolates~doi, df1, FUN = mean)
+sum(df1$no_isolates)
 ##usa bar plot
 usa.1 <- usaMeanDF %>%
   filter(country == "United States of America")
@@ -144,7 +138,7 @@ usa.1<- usa.1[order(-usa.1$Mean), ]
 
 usa.bar <- ggbarplot(usa.1, "antimicrobial_class", "Mean", 
                                fill = "farm_type", position = position_dodge(0.7),
-                               subtitle = "USA, n= 320,864",
+                               subtitle = "USA, n= 22,122",
                                xlab = FALSE, ylab = FALSE,
                                legend.title = "Farm type",
                                font.subtitle = "italic")+
@@ -185,7 +179,7 @@ swe.1<- swe.1[order(-swe.1$Mean), ]
 
 sweden.bar <- ggbarplot(swe.1, "antimicrobial_class", "Mean", 
                      fill = "farm_type", position = position_dodge(0.7),
-                     subtitle = "Sweden, n= 28,259 ",
+                     subtitle = "Sweden, n= 28,259",
                      xlab = FALSE, ylab = FALSE,
                      legend.title = "Farm type",
                      font.subtitle = "italic")+
