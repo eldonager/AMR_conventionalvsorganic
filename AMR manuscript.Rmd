@@ -21,20 +21,52 @@ library(ggpubr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Results
 
 
-We identified 1836 references in three search databases: Pub Med, Web of Science, and PubAg, from studies published between 2000 and 2022.  The studies reported the point prevalence of antimicrobial resistance in Organic and Conventional farms. Three duplicates were removed, and the remaining 1833 unique references were subjected to relevance screening, with 1744 references being removed. After assessing the remaining 89 references for eligibility, 17 were removed. The systematic review included 72 studies that met our criteria (*fig.1*). The United States of America accounted for 44% (n=32) of the surveys. Italy, Germany and Spain accounted for 5 surveys each, Sweden had 4 surveys while the remaining countries contributed between 3 and 1 survey each.
 
+We identified 1836 references in three search databases: Pub Med, Web of Science, and PubAg, from studies published between 2000 and 2022.  The studies reported the point prevalence of antimicrobial resistance in Organic and Conventional farms. Three duplicates were removed, and the remaining 1833 unique references were subjected to relevance screening, with 1744 references being removed. After assessing the remaining 89 references for eligibility, 17 were removed. The systematic review included 72 studies that met our criteria (*fig.1*). The North America accounted for 46% (n=33) of the surveys.Europe accounted for 36% (n=26), 14% (n=10) of studies were from Asia while Oceania and South America contributed to 3% (n=2) and 1% (n=1) of the studies respectively.
+
+```{r no_studies, echo=FALSE, fig.height=6, fig.width=14, message=FALSE}
+#Load data
+main_data <- read_csv("conv.csv")
+
+
+data1 <- main_data %>%
+  select(doi, continent, year)
+
+data2 <- data1 %>%
+  group_by(continent)%>%
+  count(doi, year)
+
+data3 <- data2 %>%
+  select(continent, year)
+
+
+data4<- data3 %>%
+  count(continent, year)
+
+p1<- ggbarplot(data4, "year", 
+          "n", 
+          fill = "continent",
+          subtitle = "",
+          xlab = "Year of publication", ylab = "Number of publications",
+          legend.title = "Continent",
+          font.subtitle = "italic")+
+  scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  rotate_x_text(60)
+
+p1
+```
 
 #### Antimicrobial resistance trends in Organic and conventional farms
 
-There was higher resistance in conventional farms as compared to organic farms between 2001 and 2020 except in 2016 where the resistance in organic farms was higher than in conventional farms. The resistance decreased from 43%-8% in organic farms between 2016-2020 then increased to 22% in 2020.The same trend was observed in conventional farms where the resistance decreased from 35% to 18% between 2016 and 2019, then sharply increased to 38% in 2020 (*fig.2*)
 
+Percentage resistance of antimicrobial compounds increased in both organic and conventional farms between 2001 and 2020. The percentage resistance in organic farms increased from 10% 95% Confidence interval (CI: 2-18%) to 32% (CI: 23-41%) while in conventional farms the percentage resistance increased from 18% (CI: 12-28%) to 42% (CI: 33-51%) (p = 0.0215) (*fig2*). Generally, the mean resistance is higher in conventional farms 28% as compared to organic farms 18% (supplementary materials).
 
 
 ```{r trends, echo=FALSE, fig.height=6, fig.width=14, message=FALSE}
 
+#Load data
 main_data <- read_csv("mean.data.csv")
 
 data1 <- main_data %>%
@@ -51,7 +83,7 @@ data2 <- filter(data1, !is.na(data1$sampling_end_date))
 data3 <-aggregate(mean~doi+farm_type+sampling_end_date, data2, mean)
 
 
-
+#changing percentage resistance into numeric class and rounding off  
 data3$mean <- as.numeric(as.character(data3$mean))
 
 data3$mean <- round(data3$mean, digits = 0)
@@ -61,56 +93,73 @@ data3<- data3[which(data3$mean>= 1),]
 
 
 
+##Organic farm plot
 
 organic.data<- data3 %>%
   filter(farm_type == "Organic")
    
         
-
+##Organic box plot
 
 organic.p1<-ggboxplot(organic.data, "sampling_end_date", "mean", fill = "farm_type",
         xlab = "Year", ylab = "Percent resistance", 
            palette = c("#00AFBB")) +
-  geom_boxplot(fill = "#00AFBB")+
+  geom_boxplot(fill = "#00AFBB") +
+  ggbeeswarm::geom_quasirandom(
+    
+    size = 1.5,
+    alpha = .4,
+    width = .2
+  ) +
   rotate_x_text(60)
 
 organic.plot <-ggpar(organic.p1, legend.title = "Farm type")
 
 
 
+p1 <- organic.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
+##Conventional farm plot
+
 conv.data<- data3 %>%
   filter(farm_type == "Conventional")
 
 
-
+##Conventional box plot
 
 conv.p1<-ggboxplot(conv.data, "sampling_end_date", "mean", fill = "farm_type",
                       xlab = "Year", ylab = "Percent resistance", 
                       palette = c("#FC4E07")) +
   geom_boxplot(fill = "#FC4E07") +
+  ggbeeswarm::geom_quasirandom(
+    
+    size = 1.5,
+    alpha = .4,
+    width = .2
+  ) +
   rotate_x_text(60)
 
 conv.plot <-ggpar(conv.p1, legend.title = "Farm type")
 
+p2 <- conv.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
+##Merging plots together using patchwork
 
 
-
-
-trend.plot <- (organic.plot | conv.plot)+ 
+trend.plot <- (p1 | p2)+ 
   plot_annotation(tag_levels = "a",
                   tag_prefix = "(",
                   tag_suffix = ")")+
   plot_layout(guides = "keep")&
   theme(plot.tag = element_text(),
         legend.position = "top")
-plot(trend.plot)
+
+trend.plot
 ```
 
 
 #### Host resistance
 
 
-In conventional farms, cattle, chicken, pigs, turkeys, and environments were represented by 14, 27, 16, 1 and 6 studies respectively while in organic farms, cattle, chicken, pigs, turkeys and environments were represented by 15, 32, 13, 2 and 5 studies respectively. There was higher resistance in conventional farms as compared to organic farms in cattle, chicken, pigs, and turkeys except in the environment where there was higher resistance in organic farms as compared to the conventional farms. In conventional farms, the resistance was 14.5% in cattle, 22% in chicken, 11.5% in environment, 24.5% in pigs and 46% in turkeys while the resistance rate in organic farms was 9% in cattle, 13.5% in chicken, 16% in environment, 15% in pigs and 22.5% in turkeys. 
+In conventional farms, cattle, chicken, pigs, turkeys, and environments accounted for 14, 27, 16, 1 and 6 studies respectively while in organic farms, cattle, chicken, pigs, turkeys and environments accounted for 15, 32, 13, 2 and 5 studies respectively. There was higher resistance in conventional farms as compared to organic farms in cattle, chicken, pigs, and turkeys except in the environment where there was higher resistance in organic farms as compared to the conventional farms. In conventional farms, the resistance was 14.5% in cattle, 22% in chicken, 11.5% in environment, 24.5% in pigs and 46% in turkeys while the resistance rate in organic farms was 9% in cattle, 13.5% in chicken, 16% in environment, 15% in pigs and 22.5% in turkeys. 
 
 
 
@@ -246,7 +295,8 @@ In Europe, campylobacter had a higher resistance in norfloxacin, ofloxacin and a
 Europe, North America, and Asia recorded the same resistance of erythromycin in enterococcus, 17% in organic farms. However, the resistance was higher in conventional farms as compared to organic farms. Oceania had a higher resistance of ciprofloxacin in conventional farms at 84% (CI: 80-88%) as compared to Asia, North America and Europe which recorded 31% (CI: 18-44%), 18% (13-23%) and 11% (CI: 7-15%) respectively. Europe however had higher resistance against Staphylococcus aureus in conventional farms 75% (CI: 67-83%) as compared to 38% (CI: 29-47%) in organic farms. Overall, the erythromycin resistance was lower in organic farms in Europe and North America with resistances of 10% (CI: 7-13%) and 6% (CI: 3-9%) respectively.
 
 
-```{r continents,echo=FALSE, fig.height=15, fig.width=17, message=FALSE}
+```{r continents,echo=FALSE, fig.height=15, fig.width=20, message=FALSE}
+
 #Load data
 main_data <- read_csv("conv.csv")
 
@@ -267,7 +317,6 @@ data1 <- main_data%>%
 
 data1 <- main_data %>%
   group_by(country) %>%
-  filter(who_classification == "Critically important")%>%
   select("continent",
          "doi",
          "farm_type",
@@ -302,14 +351,8 @@ data2 <- data1 %>%
          "no_isolates" )
 
 
- 
-data3 <- aggregate(percent_resistant~antimicrobial_compound+doi+pathogen+host+continent+
-                     farm_type+no_isolates,
-                     data2, mean)
-                         
 
-
-data3 <- data3 %>%select("continent",
+data3 <- data2 %>%select("continent",
                         "doi",
                          "farm_type",
                         "host",
@@ -339,7 +382,7 @@ AMR.tmp.ecoli <- cbind(ecoli, ResIsoEcoli)
 #determine total NIsolates
 EcoliNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                              antimicrobial_compound + pathogen + percent_resistant+
-                             ResIsoEcoli, data = AMR.tmp.ecoli, FUN = unique)
+                             ResIsoEcoli, data = AMR.tmp.ecoli, FUN = sum)
 
 
 EcoliNIsolates$no_isolates <- sapply(EcoliNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -379,6 +422,10 @@ EcoliMeanDF$CIHigh[EcoliMeanDF$CIHigh >100] = 100
 EcoliMeanDF <- EcoliMeanDF%>%
   filter(Mean>1)
 
+
+
+
+  
 ##Ecoli bars  
 
 ##Europe
@@ -389,7 +436,7 @@ europe.ecoli<- europe.ecoli[order(-europe.ecoli$Mean), ]
 
 europe.ecoli.plot <- ggbarplot(europe.ecoli, "antimicrobial_compound", "Mean", 
                                fill = "farm_type", position = position_dodge(0.7),
-                               subtitle = "Europe, E.coli = 71,575",
+                               subtitle = "Europe, E.coli n= 18,910",
                                xlab = FALSE, ylab = FALSE,
                                legend.title = "Farm type",
                                 font.subtitle = "italic")+
@@ -410,7 +457,7 @@ asia.ecoli<- asia.ecoli[order(-asia.ecoli$Mean), ]
 
 asia.ecoli.plot <- ggbarplot(asia.ecoli, "antimicrobial_compound", "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "Asia, E.coli = 970",
+                             subtitle = "Asia, E.coli n= 970",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type",
                              font.subtitle = "italic")+
@@ -430,7 +477,7 @@ N.A.ecoli<- N.A.ecoli[order(-N.A.ecoli$Mean), ]
 
 N.A.ecoli.plot <- ggbarplot(N.A.ecoli, "antimicrobial_compound", "Mean", 
                             fill = "farm_type", position = position_dodge(0.7),
-                            subtitle = "North America, E.coli = 129,894",
+                            subtitle = "North America, E.coli n= 27,381",
                             xlab = FALSE, ylab = FALSE,
                             legend.title = "Farm type",
                              font.subtitle = "italic")+
@@ -451,7 +498,7 @@ oceania.ecoli<- oceania.ecoli[order(-oceania.ecoli$Mean), ]
 
 oceania.ecoli.plot <- ggbarplot(oceania.ecoli, "antimicrobial_compound", "Mean", 
                                 fill = "farm_type", position = position_dodge(0.7),
-                                subtitle = "Oceania, E.coli = 4,756",
+                                subtitle = "Oceania, E.coli n= 4,756",
                                 xlab = FALSE, ylab = FALSE,
                                 legend.title = "Farm type", 
                                font.subtitle = "italic")+
@@ -470,7 +517,7 @@ S.A.ecoli<- S.A.ecoli[order(-S.A.ecoli$Mean), ]
 
 S.A.ecoli.plot <- ggbarplot(S.A.ecoli, "antimicrobial_compound", "Mean", 
                             fill = "farm_type", position = position_dodge(0.7),
-                            subtitle = "South America, E.coli = 2340",
+                            subtitle = "South America, E.coli n= 2340",
                             xlab = FALSE, ylab = FALSE,
                             legend.title = "Farm type", 
                              font.subtitle = "italic")+
@@ -498,7 +545,7 @@ AMR.tmp.entero <- cbind(entero, ResIsoEntero)
 #determine total NIsolates
 EnteroNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                               antimicrobial_compound + pathogen + percent_resistant+
-                              ResIsoEntero, data = AMR.tmp.entero, FUN = unique)
+                              ResIsoEntero, data = AMR.tmp.entero, FUN = sum)
 
 
 EnteroNIsolates$no_isolates <- sapply(EnteroNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -554,7 +601,7 @@ asia.entero<- asia.entero[order(-asia.entero$Mean), ]
 asia.entero.plot <- ggbarplot(asia.entero, "antimicrobial_compound", "Mean", 
                               fill = "farm_type", 
                               position = position_dodge(0.7),
-                              subtitle = "Asia, Enterococcus = 468",
+                              subtitle = "Asia, Enterococcus n= 468",
                               xlab = FALSE, ylab = FALSE,
                               legend.title = "Farm type",
                              font.subtitle = "italic")+
@@ -576,7 +623,7 @@ europe.entero<- europe.entero[order(-europe.entero$Mean), ]
 europe.enterococcus.plot <- ggbarplot(europe.entero, "antimicrobial_compound",
                                       "Mean", 
                                       fill = "farm_type", position = position_dodge(0.7),
-                                      subtitle = "Europe, Enterococcus = 4,196",
+                                      subtitle = "Europe, Enterococcus n= 4,196",
                                       xlab = FALSE, ylab = FALSE,
                                       legend.title = "Farm type",
                                        font.subtitle = "italic")+
@@ -599,7 +646,7 @@ N.A.entero<- N.A.entero[order(-N.A.entero$Mean), ]
 
 N.A.entero.plot <- ggbarplot(N.A.entero, "antimicrobial_compound", "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "North America, Enterococcus = 4,746",
+                             subtitle = "North America, Enterococcus n= 4,746",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type", 
                             font.subtitle = "italic")+
@@ -622,7 +669,7 @@ oceania.entero<- oceania.entero[order(-oceania.entero$Mean), ]
 oceania.enterococcus.plot <- ggbarplot(oceania.entero, "antimicrobial_compound",
                                        "Mean", 
                                        fill = "farm_type", position = position_dodge(0.7),
-                                       subtitle = "Oceania, Enterococcus = 1765",
+                                       subtitle = "Oceania, Enterococcus n= 1765",
                                        xlab = FALSE, ylab = FALSE,
                                        legend.title = "Farm type",
                                        font.subtitle = "italic")+
@@ -652,7 +699,7 @@ AMR.tmp.listeria <- cbind(listeria, ResIsoListeria)
 #determine total NIsolates
 ListeriaNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                               antimicrobial_compound + pathogen + percent_resistant+
-                              ResIsoListeria, data = AMR.tmp.listeria, FUN = unique)
+                              ResIsoListeria, data = AMR.tmp.listeria, FUN = sum)
 
 
 ListeriaNIsolates$no_isolates <- sapply(ListeriaNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -711,7 +758,7 @@ asia.list<- asia.list[order(-asia.list$Mean), ]
 asia.listeria.plot <- ggbarplot(asia.list, "antimicrobial_compound",
                                 "Mean", 
                                 fill = "farm_type", position = position_dodge(0.7),
-                                subtitle = "Asia, Listeria = 480",
+                                subtitle = "Asia, Listeria n= 480",
                                 xlab = FALSE, ylab = FALSE,
                                 legend.title = "Farm type",
                                 font.subtitle = "italic")+
@@ -734,7 +781,7 @@ europe.list<- europe.list[order(-europe.list$Mean), ]
 europe.listeria.plot <- ggbarplot(europe.list, "antimicrobial_compound", 
                                   "Mean", 
                                   fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Europe, Listeria = 32",
+                                  subtitle = "Europe, Listeria n= 32",
                                   xlab = FALSE, ylab = FALSE,
                                   legend.title = "Farm type", 
                                    font.subtitle = "italic")+
@@ -760,7 +807,7 @@ AMR.tmp.sal <- cbind(sal, ResIsoSal)
 #determine total NIsolates
 SalNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                               antimicrobial_compound + pathogen + percent_resistant+
-                            ResIsoSal, data = AMR.tmp.sal, FUN = unique)
+                            ResIsoSal, data = AMR.tmp.sal, FUN = sum)
 
 
 SalNIsolates$no_isolates <- sapply(SalNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -818,13 +865,14 @@ asia.sal<- asia.sal[order(-asia.sal$Mean), ]
 asia.salmonella.plot <- ggbarplot(asia.sal, "antimicrobial_compound",
                                   "Mean", 
                                   fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Asia, Salmonella = 5,924",
+                                  subtitle = "Asia, Salmonella n= 5,924",
                                   xlab = FALSE, ylab = FALSE,
                                   legend.title = "Farm type",
                                  font.subtitle = "italic")+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
+
 
 
 
@@ -840,7 +888,7 @@ N.A.sal <- N.A.sal [order(-N.A.sal$Mean), ]
 N.A.salmonella.plot <- ggbarplot(N.A.sal, "antimicrobial_compound", 
                                  "Mean", 
                                  fill = "farm_type", position = position_dodge(0.7),
-                                 subtitle = "North America, Salmonella = 33,079",
+                                 subtitle = "North America, Salmonella n= 22,696",
                                  xlab = FALSE, ylab = FALSE,
                                  legend.title = "Farm type", 
                                  font.subtitle = "italic")+
@@ -925,7 +973,7 @@ asia.staph<- asia.staph[order(-asia.staph$Mean), ]
 
 asia.Staphylococcus.plot <- ggbarplot(asia.staph, "antimicrobial_compound", "Mean", 
                                       fill = "farm_type", position = position_dodge(0.7),
-                                      subtitle = "Asia, Staphylococcus = 972",
+                                      subtitle = "Asia, Staphylococcus n= 972",
                                       xlab = FALSE, ylab = FALSE,
                                       legend.title = "Farm type",
                                      font.subtitle = "italic")+
@@ -949,7 +997,7 @@ N.A.staphy<- N.A.staphy[order(-N.A.staphy$Mean), ]
 
 N.A.Staphylococcus.plot <- ggbarplot(N.A.staphy, "antimicrobial_compound", "Mean", 
                                      fill = "farm_type", position = position_dodge(0.7),
-                                     subtitle = "North America, Staphylococcus = 405",
+                                     subtitle = "North America, Staphylococcus n= 405",
                                      xlab = FALSE, ylab = FALSE,
                                      legend.title = "Farm type", 
                                     font.subtitle = "italic")+
@@ -976,7 +1024,7 @@ AMR.tmp.campy <- cbind(campy, ResIsoCampy)
 #determine total NIsolates
 CampyNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                             antimicrobial_compound + pathogen + percent_resistant+
-                            ResIsoCampy, data = AMR.tmp.campy, FUN = unique)
+                            ResIsoCampy, data = AMR.tmp.campy, FUN = sum)
 
 
 CampyNIsolates$no_isolates <- sapply(CampyNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -1033,14 +1081,13 @@ europe.campy<- europe.campy[order(-europe.campy$Mean), ]
 
 europe.Campylobacter.plot <- ggbarplot(europe.campy, "antimicrobial_compound", "Mean", 
                                        fill = "farm_type", position = position_dodge(0.7),
-                                       subtitle = "Europe, Campylobacter = 4966",
+                                       subtitle = "Europe, Campylobacter n= 4966",
                                        xlab = FALSE, ylab = FALSE,
                                        legend.title = "Farm type",
                                       font.subtitle = "italic")+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
-
 
 
 
@@ -1056,7 +1103,7 @@ N.A.campylobacter<- N.A.campylobacter[order(-N.A.campylobacter$Mean), ]
 
 N.A.campylobacter.plot <- ggbarplot(N.A.campylobacter, "antimicrobial_compound", "Mean", 
                                     fill = "farm_type", position = position_dodge(0.7),
-                                    subtitle = "North America, Campylobacter = 80,420",
+                                    subtitle = "North America, Campylobacter n= 22,586",
                                     xlab = FALSE, ylab = FALSE,
                                     legend.title = "Farm type", 
                                     font.subtitle = "italic")+
@@ -1082,7 +1129,7 @@ AMR.tmp.mrsa <- cbind(mrsa, ResIsoMrsa)
 #determine total NIsolates
 MrsaNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                               antimicrobial_compound + pathogen + percent_resistant+
-                              ResIsoMrsa, data = AMR.tmp.mrsa, FUN = unique)
+                              ResIsoMrsa, data = AMR.tmp.mrsa, FUN = sum)
 
 
 MrsaNIsolates$no_isolates <- sapply(MrsaNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -1144,7 +1191,7 @@ europe.MRSA<- europe.MRSA[order(-europe.MRSA$Mean), ]
 europe.MRSA.plot <- ggbarplot(europe.MRSA, "antimicrobial_compound", 
                               "Mean", 
                               fill = "farm_type", position = position_dodge(0.7),
-                              subtitle = "Europe, MRSA = 2,933",
+                              subtitle = "Europe, MRSA n= 2,933",
                               xlab = FALSE, ylab = FALSE,
                               legend.title = "Farm type", 
                               font.subtitle = "italic")+
@@ -1170,7 +1217,7 @@ AMR.tmp.saureus <- cbind(saureus, ResIsoSaureus)
 #determine total NIsolates
 SaureusNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
                             antimicrobial_compound + pathogen + percent_resistant+
-                            ResIsoSaureus, data = AMR.tmp.saureus, FUN = unique)
+                            ResIsoSaureus, data = AMR.tmp.saureus, FUN = sum)
 
 
 SaureusNIsolates$no_isolates <- sapply(SaureusNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -1231,7 +1278,7 @@ europe.saureus<- europe.saureus[order(-europe.saureus$Mean), ]
 europe.s.aureus.plot <- ggbarplot(europe.saureus, "antimicrobial_compound", 
                                   "Mean", 
                                   fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Europe, S.aureus = 3,950",
+                                  subtitle = "Europe, S.aureus n= 3,950",
                                   xlab = FALSE, ylab = FALSE,
                                   legend.title = "Farm type",
                                  font.subtitle = "italic")+
@@ -1253,7 +1300,7 @@ N.A.saureus<- N.A.saureus[order(-N.A.saureus$Mean), ]
 N.A.saureus.plot <- ggbarplot(N.A.saureus, "antimicrobial_compound",
                               "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "North America, S.aureus = 1,521",
+                             subtitle = "North America, S.aureus n= 1,521",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type", 
                              font.subtitle = "italic")+
@@ -1293,16 +1340,9 @@ China had a higher resistance to macrolide, a critically important antimicrobial
 
 ```{r country,echo=FALSE, fig.height=15, fig.width=17, message=FALSE}
 
+
 #Load data
 main_data <- read_csv("conv.csv")
-
-
-
-
-
-
-
-
 
 
 data1 <- main_data %>%
@@ -1342,13 +1382,10 @@ data2 <- data1 %>%
 
 
 
-data3 <- aggregate(percent_resistant~antimicrobial_class+doi+pathogen+host+country+
-                     farm_type+no_isolates,
-                   data2, mean)
 
 
 
-data3 <- data3 %>%select("country",
+data3 <- data2 %>%select("country",
                          "doi",
                          "farm_type",
                          "host",
@@ -1367,9 +1404,6 @@ data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
 
 
 
-data3 %>%
-  count(country)%>%
-  view()
 
 usa<- data3
 #create a function to return the number of resistant isolates
@@ -1383,7 +1417,7 @@ AMR.tmp.usa <- cbind(usa, ResIsousa)
 #determine total NIsolates
 usaNIsolates <- aggregate(no_isolates ~ doi + country + farm_type + 
                               antimicrobial_class + pathogen + percent_resistant+
-                              ResIsousa, data = AMR.tmp.usa, FUN = unique)
+                              ResIsousa, data = AMR.tmp.usa, FUN = sum)
 
 
 usaNIsolates$no_isolates <- sapply(usaNIsolates$no_isolates, function(x) sum(unlist(x)))
@@ -1425,6 +1459,7 @@ usaMeanDF <- usaMeanDF%>%
 
 country.data <- usaMeanDF
 
+
 ##usa bar plot
 usa.1 <- usaMeanDF %>%
   filter(country == "United States of America")
@@ -1433,7 +1468,7 @@ usa.1<- usa.1[order(-usa.1$Mean), ]
 
 usa.bar <- ggbarplot(usa.1, "antimicrobial_class", "Mean", 
                                fill = "farm_type", position = position_dodge(0.7),
-                               subtitle = "USA, n= 320,864",
+                               subtitle = "USA, n= 22,122",
                                xlab = FALSE, ylab = FALSE,
                                legend.title = "Farm type",
                                font.subtitle = "italic")+
@@ -1474,7 +1509,7 @@ swe.1<- swe.1[order(-swe.1$Mean), ]
 
 sweden.bar <- ggbarplot(swe.1, "antimicrobial_class", "Mean", 
                      fill = "farm_type", position = position_dodge(0.7),
-                     subtitle = "Sweden, n= 28,259 ",
+                     subtitle = "Sweden, n= 28,259",
                      xlab = FALSE, ylab = FALSE,
                      legend.title = "Farm type",
                      font.subtitle = "italic")+
@@ -1565,6 +1600,7 @@ country.plot <- (usa.bar | germany.bar | Southkorea.bar) /
 
 
 country.plot
+
 ```
 
 
