@@ -32,6 +32,7 @@ data3<- data3[which(data3$mean>= 1),]
 
 
 
+
 ##Organic farm plot
 
 organic.data<- data3 %>%
@@ -54,6 +55,9 @@ organic.p1<-ggboxplot(organic.data, "sampling_end_date", "mean", fill = "farm_ty
 
 organic.plot <-ggpar(organic.p1, legend.title = "Farm type")
 
+
+
+p1 <- organic.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
 ##Conventional farm plot
 
 conv.data<- data3 %>%
@@ -76,11 +80,11 @@ conv.p1<-ggboxplot(conv.data, "sampling_end_date", "mean", fill = "farm_type",
 
 conv.plot <-ggpar(conv.p1, legend.title = "Farm type")
 
-
+p2 <- conv.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
 ##Merging plots together using patchwork
 
 
-trend.plot <- (organic.plot | conv.plot)+ 
+trend.plot <- (p1 | p2)+ 
   plot_annotation(tag_levels = "a",
                   tag_prefix = "(",
                   tag_suffix = ")")+
@@ -88,5 +92,5 @@ trend.plot <- (organic.plot | conv.plot)+
   theme(plot.tag = element_text(),
         legend.position = "top")
 
-
-ggsave(filename = "trends_plot.png",trend.plot)
+trend.plot
+#ggsave(filename = "trends_plot.png",trend.plot)
