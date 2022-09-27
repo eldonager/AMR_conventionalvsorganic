@@ -8,7 +8,6 @@ main_data <- read_csv("conv.csv")
 
 
 
-
 data1 <- main_data%>%
   mutate(
     continent =
@@ -138,15 +137,32 @@ EcoliMeanDF <- EcoliMeanDF%>%
 europe.ecoli <- EcoliMeanDF %>%
   filter(continent == "Europe")
 
-europe.ecoli<- europe.ecoli[order(-europe.ecoli$Mean), ]
+europe.ecoli$antimicrobial_compound <- factor(europe.ecoli$antimicrobial_compound, 
+                                              levels=c('AMC', 'AMK','AMP', 'APR', 'AZI', 'CAZI',
+                                                       'CEF', 'CFP', 'CIP', 'CST', 'CTX', 
+                                                       'ENR', 'GEN','IMP', 'KAN', 'MZL', 'NAL', 
+                                                       'NEO', 'PIP',
+                                                       'STR', 'TGC', 'TZP', 
+                                                       'FOS', 'CEC',
+                                                      'CFZ', 'CHL', 'CXM', 'DOX', 'FOX', 'NIT',
+                                                     'SPT', 'SMZ',
+                                                       'TET', 'TMP', 'TMP-SMZ'
+                                                       ))
 
 europe.ecoli.plot <- ggbarplot(europe.ecoli, "antimicrobial_compound", "Mean", 
                                fill = "farm_type", position = position_dodge(0.7),
-                               subtitle = "Europe, E.coli n= 18,910",
+                               subtitle = "Europe, E.coli n = 9,007",
                                xlab = FALSE, ylab = FALSE,
                                legend.title = "Farm type",
                                 font.subtitle = "italic")+
-  rotate_x_text(90)+
+  geom_vline(xintercept = 23.5) +
+geom_text(data=tibble(x=10, y=85),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=29, y=85),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
+rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
 
@@ -159,17 +175,28 @@ asia.ecoli <- EcoliMeanDF %>%
   filter(continent == "Asia")
 
 ##Ordering bar graphs in descending order
-asia.ecoli<- asia.ecoli[order(-asia.ecoli$Mean), ]
+
+asia.ecoli$antimicrobial_compound <- factor(asia.ecoli$antimicrobial_compound, 
+                                              levels=c('AMC', 'CST', 'GEN', 'KAN', 'NEO',
+                                                       'DOX', 'TMP-SMZ'))
 
 asia.ecoli.plot <- ggbarplot(asia.ecoli, "antimicrobial_compound", "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "Asia, E.coli n= 970",
+                             subtitle = "Asia, E.coli n= 215",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type",
                              font.subtitle = "italic")+
+  geom_vline(xintercept = 5.5) +
+  geom_text(data=tibble(x=2.5, y=111),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=6.85, y=111),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
+
 
 
 
@@ -179,14 +206,25 @@ asia.ecoli.plot <- ggbarplot(asia.ecoli, "antimicrobial_compound", "Mean",
 N.A.ecoli <- EcoliMeanDF %>%
   filter(continent == "North America")
 
-N.A.ecoli<- N.A.ecoli[order(-N.A.ecoli$Mean), ]
+N.A.ecoli$antimicrobial_compound <- factor(N.A.ecoli$antimicrobial_compound, 
+                                            levels=c('AMC', 'AMP', 'CEF', 'ERY', 'GEN',
+                                                     'KAN', 'NAL', 'NEO', 'STR', 'TYL',
+                                                     'CHL', 'CTET', 'PEN', 'SMZ', 'SPT',
+                                           'TET'))
 
 N.A.ecoli.plot <- ggbarplot(N.A.ecoli, "antimicrobial_compound", "Mean", 
                             fill = "farm_type", position = position_dodge(0.7),
-                            subtitle = "North America, E.coli n= 27,381",
+                            subtitle = "North America, E.coli n= 23,845",
                             xlab = FALSE, ylab = FALSE,
                             legend.title = "Farm type",
                              font.subtitle = "italic")+
+  geom_vline(xintercept = 10.5) +
+  geom_text(data=tibble(x=5, y=110),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=13, y=110),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -200,14 +238,25 @@ N.A.ecoli.plot <- ggbarplot(N.A.ecoli, "antimicrobial_compound", "Mean",
 oceania.ecoli <- EcoliMeanDF %>%
   filter(continent == "Oceania")
 
-oceania.ecoli<- oceania.ecoli[order(-oceania.ecoli$Mean), ]
+
+oceania.ecoli$antimicrobial_compound <- factor(oceania.ecoli$antimicrobial_compound, 
+                                           levels=c('AMP', 'CPDX', 'MER', 'STR',
+                                                    'NEO', 'CHL', 'FOX', 'TET', 
+                                                    'TMP-SMZ'))
 
 oceania.ecoli.plot <- ggbarplot(oceania.ecoli, "antimicrobial_compound", "Mean", 
                                 fill = "farm_type", position = position_dodge(0.7),
-                                subtitle = "Oceania, E.coli n= 4,756",
+                                subtitle = "Oceania, E.coli n = 2,379",
                                 xlab = FALSE, ylab = FALSE,
                                 legend.title = "Farm type", 
                                font.subtitle = "italic")+
+  geom_vline(xintercept = 5.5) +
+  geom_text(data=tibble(x=2.5, y=40),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=7, y=40),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -219,14 +268,25 @@ oceania.ecoli.plot <- ggbarplot(oceania.ecoli, "antimicrobial_compound", "Mean",
 S.A.ecoli <- EcoliMeanDF %>%
   filter(continent == "South America")
 
-S.A.ecoli<- S.A.ecoli[order(-S.A.ecoli$Mean), ]
+S.A.ecoli$antimicrobial_compound <- factor(S.A.ecoli$antimicrobial_compound, 
+                                               levels=c('AMC', 'AMP', 'CAZI', 'CIP',
+                                                        'CTX', 'ENR', 'GEN', 'NAL', 
+                                                        'NOR', 'CFZ', 'CHL', 'FOX',
+                                                        'NIT', 'TET', 'TMP-SMZ'))
 
 S.A.ecoli.plot <- ggbarplot(S.A.ecoli, "antimicrobial_compound", "Mean", 
                             fill = "farm_type", position = position_dodge(0.7),
-                            subtitle = "South America, E.coli n= 2340",
+                            subtitle = "South America, E.coli n = 312",
                             xlab = FALSE, ylab = FALSE,
                             legend.title = "Farm type", 
                              font.subtitle = "italic")+
+  geom_vline(xintercept = 9.5) +
+  geom_text(data=tibble(x=4, y=105),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=12, y=105),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -302,15 +362,24 @@ EnteroMeanDF <- EnteroMeanDF%>%
 asia.entero <- EnteroMeanDF %>%
   filter(continent == "Asia")
 
-asia.entero<- asia.entero[order(-asia.entero$Mean), ]
+asia.entero$antimicrobial_compound <- factor(asia.entero$antimicrobial_compound, 
+                                           levels=c('CIP', 'ERY', 'GEN', 'LZD',
+                                                    'RMP', 'NIT', 'Q-D', 'TET'))
 
 asia.entero.plot <- ggbarplot(asia.entero, "antimicrobial_compound", "Mean", 
                               fill = "farm_type", 
                               position = position_dodge(0.7),
-                              subtitle = "Asia, Enterococcus n= 468",
+                              subtitle = "Asia, Enterococcus n= 104",
                               xlab = FALSE, ylab = FALSE,
                               legend.title = "Farm type",
                              font.subtitle = "italic")+
+  geom_vline(xintercept = 5.5) +
+  geom_text(data=tibble(x=3, y=93),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=7, y=93),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -324,18 +393,31 @@ asia.entero.plot <- ggbarplot(asia.entero, "antimicrobial_compound", "Mean",
 europe.entero <- EnteroMeanDF %>%
   filter(continent == "Europe")
 
-europe.entero<- europe.entero[order(-europe.entero$Mean), ]
+europe.entero$antimicrobial_compound <- factor(europe.entero$antimicrobial_compound, 
+                                             levels=c('AMP', 'CIP', 'ERY', 'FOS',
+                                                      'GEN', 'IMP', 'RMP', 'STR',
+                                                      'TYL', 'VAN', 'CHL', 'DOX',
+                                                      'NIT'))
+
 
 europe.enterococcus.plot <- ggbarplot(europe.entero, "antimicrobial_compound",
                                       "Mean", 
                                       fill = "farm_type", position = position_dodge(0.7),
-                                      subtitle = "Europe, Enterococcus n= 4,196",
+                                      subtitle = "Europe, Enterococcus n = 568",
                                       xlab = FALSE, ylab = FALSE,
                                       legend.title = "Farm type",
                                        font.subtitle = "italic")+
+  geom_vline(xintercept = 10.5) +
+  geom_text(data=tibble(x=5, y=65),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=12.6, y=65),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
+
 
 
 
@@ -347,15 +429,28 @@ europe.enterococcus.plot <- ggbarplot(europe.entero, "antimicrobial_compound",
 N.A.entero <- EnteroMeanDF %>%
   filter(continent == "North America")
 
-N.A.entero<- N.A.entero[order(-N.A.entero$Mean), ]
+N.A.entero$antimicrobial_compound <- factor(N.A.entero$antimicrobial_compound, 
+                                               levels=c('AMC', 'AMK', 'AMP', 'AZI',
+                                                        'CIP', 'ERY', 'GEN', 'KAN',
+                                                        'LZD', 'STR', 'TGC', 'TYL',
+                                                        'CEC', 'CHL', 'FLY', 'FOX',
+                                                        'LCM', 'NIT', 'PEN', 'Q-D',
+                                                        'TET'))
 
 
 N.A.entero.plot <- ggbarplot(N.A.entero, "antimicrobial_compound", "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "North America, Enterococcus n= 4,746",
+                             subtitle = "North America, Enterococcus n = 811",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type", 
                             font.subtitle = "italic")+
+  geom_vline(xintercept = 12.5) +
+  geom_text(data=tibble(x=6, y=110),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=16, y=110),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -370,15 +465,22 @@ N.A.entero.plot <- ggbarplot(N.A.entero, "antimicrobial_compound", "Mean",
 oceania.entero <- EnteroMeanDF %>%
   filter(continent == "Oceania",)
 
-oceania.entero<- oceania.entero[order(-oceania.entero$Mean), ]
+
 
 oceania.enterococcus.plot <- ggbarplot(oceania.entero, "antimicrobial_compound",
                                        "Mean", 
                                        fill = "farm_type", position = position_dodge(0.7),
-                                       subtitle = "Oceania, Enterococcus n= 1765",
+                                       subtitle = "Oceania, Enterococcus n = 706",
                                        xlab = FALSE, ylab = FALSE,
                                        legend.title = "Farm type",
                                        font.subtitle = "italic")+
+  geom_vline(xintercept = 3.5) +
+  geom_text(data=tibble(x=1.5, y=100),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=4.1, y=100),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -387,113 +489,6 @@ oceania.enterococcus.plot <- ggbarplot(oceania.entero, "antimicrobial_compound",
 
 
 
-
-
-##Listeria data
-
-listeria<- subset(data3, pathogen == "Listeria")
-#create a function to return the number of resistant isolates
-new.function1 <- function(x,y) {
-  (x*y)/100}
-
-ResIsoListeria <- mapply(new.function1,listeria$percent_resistant,
-                         listeria$no_isolates)
-
-ResIsoListeria <- round(ResIsoListeria, digits = 0)
-AMR.tmp.listeria <- cbind(listeria, ResIsoListeria)
-
-#determine total NIsolates
-ListeriaNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
-                              antimicrobial_compound + pathogen + percent_resistant+
-                              ResIsoListeria, data = AMR.tmp.listeria, FUN = sum)
-
-
-ListeriaNIsolates$no_isolates <- sapply(ListeriaNIsolates$no_isolates, function(x) sum(unlist(x)))
-
-#aggregate all resistant isolates and all NIsolates by  compound and region
-listeriares <- aggregate(ResIsoListeria ~ antimicrobial_compound  + farm_type+
-                        continent, 
-                      data = AMR.tmp.listeria, FUN = sum)
-
-listeriaAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
-                        continent, 
-                      data = AMR.tmp.listeria, FUN = sum)
-#and divide ResIso/NIsolates to return true mean
-ListeriaMean <- round((listeriares$ResIsoListeria /listeriaAll$no_isolates)*100, digits = 0)
-ListeriaMeanDF <- as.data.frame(cbind(listeriares$antimicrobial_compound,
-                                   listeriares$farm_type, listeriares$continent,
-                                   ListeriaMean, listeriaAll$no_isolates))
-
-colnames(ListeriaMeanDF) <- c("antimicrobial_compound","farm_type","continent",
-                           "Mean","no_isolates")
-
-ListeriaMeanDF$Mean <- as.numeric(as.character(ListeriaMeanDF$Mean))
-ListeriaMeanDF$no_isolates <- as.numeric(as.character(ListeriaMeanDF$no_isolates))
-
-#restrict display drug pairings where NIsolates > 10
-ListeriaMeanDF = ListeriaMeanDF[which(ListeriaMeanDF$no_isolates >= 10),]
-
-# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
-CI.function <- function(x,y) {
-  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
-
-#95% CI
-CIlisteria<- as.data.frame(t(mapply(CI.function, ListeriaMeanDF$Mean/100,
-                                    ListeriaMeanDF$no_isolates)))
-ListeriaMeanDF <-cbind(ListeriaMeanDF, round(CIlisteria*100, digits = 0))
-colnames(ListeriaMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
-                           "Mean","no_isolates","CILow","CIHigh")
-ListeriaMeanDF$CILow[ListeriaMeanDF$CILow < 0] = 0
-ListeriaMeanDF$CIHigh[ListeriaMeanDF$CIHigh >100] = 100
-
-##remove data with less than 1% resistance
-ListeriaMeanDF <- ListeriaMeanDF%>%
-  filter(Mean>1)
-
-
-#Listeria plots
-
-
-##Asia listeria bar plot
-
-asia.list <- ListeriaMeanDF %>%
-  filter(continent == "Asia")
-
-asia.list<- asia.list[order(-asia.list$Mean), ]
-
-asia.listeria.plot <- ggbarplot(asia.list, "antimicrobial_compound",
-                                "Mean", 
-                                fill = "farm_type", position = position_dodge(0.7),
-                                subtitle = "Asia, Listeria n= 480",
-                                xlab = FALSE, ylab = FALSE,
-                                legend.title = "Farm type",
-                                font.subtitle = "italic")+
-  rotate_x_text(90)+
-  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
-                 position = position_dodge(width = 0.7))
-
-
-
-
-
-
-##Europe Listeria bar plot
-
-europe.list <- ListeriaMeanDF %>%
-  filter(continent == "Europe")
-
-europe.list<- europe.list[order(-europe.list$Mean), ]
-
-europe.listeria.plot <- ggbarplot(europe.list, "antimicrobial_compound", 
-                                  "Mean", 
-                                  fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Europe, Listeria n= 32",
-                                  xlab = FALSE, ylab = FALSE,
-                                  legend.title = "Farm type", 
-                                   font.subtitle = "italic")+
-  rotate_x_text(90)+
-  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
-                 position = position_dodge(width = 0.7))
 
 
 
@@ -566,15 +561,31 @@ SalMeanDF <- SalMeanDF%>%
 asia.sal <- SalMeanDF %>%
   filter(continent == "Asia")
 
-asia.sal<- asia.sal[order(-asia.sal$Mean), ]
+
+asia.sal$antimicrobial_compound <- factor(asia.sal$antimicrobial_compound, 
+                                            levels=c('AMC', 'AMP', 'CAZI', 'CIP',
+                                                     'CTX', 'ERY', 'GEN', 'GFX',
+                                                     'NAL', 'NEO', 'STR', 'CEP',
+                                                     'CTF', 'MER', 'CHL', 'DOX',
+                                                     'FLO', 'NIT', 'OFX', 'SMZ',
+                                                     'SPT', 'TET', 'TMP', 'TMP-SMZ',
+                                                     'CEF', 'FOX'))
+
 
 asia.salmonella.plot <- ggbarplot(asia.sal, "antimicrobial_compound",
                                   "Mean", 
                                   fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Asia, Salmonella n= 5,924",
+                                  subtitle = "Asia, Salmonella n = 845",
                                   xlab = FALSE, ylab = FALSE,
                                   legend.title = "Farm type",
                                  font.subtitle = "italic")+
+  geom_vline(xintercept = 14.5) +
+  geom_text(data=tibble(x=8, y=112),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=18.5, y=112),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -589,15 +600,28 @@ asia.salmonella.plot <- ggbarplot(asia.sal, "antimicrobial_compound",
 N.A.sal <- SalMeanDF %>%
   filter(continent == "North America")
 
-N.A.sal <- N.A.sal [order(-N.A.sal$Mean), ]
+N.A.sal$antimicrobial_compound <- factor(N.A.sal$antimicrobial_compound, 
+                                          levels=c('AMC', 'AMP', 'AZI', 'CEF',
+                                                   'CRO', 'CTF', 'GEN', 'KAN',
+                                                   'STR', 'CHL', 'FOX', 'SMZ',
+                                                   'TET', 'TMP-SMZ'))
+
 
 N.A.salmonella.plot <- ggbarplot(N.A.sal, "antimicrobial_compound", 
                                  "Mean", 
                                  fill = "farm_type", position = position_dodge(0.7),
-                                 subtitle = "North America, Salmonella n= 22,696",
+                                 subtitle = "North America, Salmonella n = 5,230",
                                  xlab = FALSE, ylab = FALSE,
                                  legend.title = "Farm type", 
                                  font.subtitle = "italic")+
+  geom_vline(xintercept = 9.5) +
+  geom_text(data=tibble(x=5, y=80),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=12, y=80),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
+  
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -674,19 +698,25 @@ StaphMeanDF <- StaphMeanDF%>%
 asia.staph <- StaphMeanDF %>%
   filter(continent == "Asia")
 
-asia.staph<- asia.staph[order(-asia.staph$Mean), ]
+
 
 
 asia.Staphylococcus.plot <- ggbarplot(asia.staph, "antimicrobial_compound", "Mean", 
                                       fill = "farm_type", position = position_dodge(0.7),
-                                      subtitle = "Asia, Staphylococcus n= 972",
+                                      subtitle = "Asia, Staphylococcus n = 972",
                                       xlab = FALSE, ylab = FALSE,
                                       legend.title = "Farm type",
                                      font.subtitle = "italic")+
+  geom_vline(xintercept = 5.5) +
+  geom_text(data=tibble(x=1.7, y=108),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=6.1, y=108),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
-
 
 
 
@@ -699,18 +729,24 @@ asia.Staphylococcus.plot <- ggbarplot(asia.staph, "antimicrobial_compound", "Mea
 N.A.staphy <- StaphMeanDF %>%
   filter(continent == "North America")
 
-N.A.staphy<- N.A.staphy[order(-N.A.staphy$Mean), ]
+
 
 N.A.Staphylococcus.plot <- ggbarplot(N.A.staphy, "antimicrobial_compound", "Mean", 
                                      fill = "farm_type", position = position_dodge(0.7),
-                                     subtitle = "North America, Staphylococcus n= 405",
+                                     subtitle = "North America, Staphylococcus n = 405",
                                      xlab = FALSE, ylab = FALSE,
                                      legend.title = "Farm type", 
                                     font.subtitle = "italic")+
+  geom_vline(xintercept = 1.5) +
+  geom_text(data=tibble(x=0.9, y=35),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=2, y=35),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
-
 
 
 
@@ -783,14 +819,26 @@ CampyMeanDF <- CampyMeanDF%>%
 europe.campy <- CampyMeanDF %>%
   filter(continent == "Europe")
 
-europe.campy<- europe.campy[order(-europe.campy$Mean), ]
+europe.campy$antimicrobial_compound <- factor(europe.campy$antimicrobial_compound, 
+                                         levels=c('AMC', 'AMK', 'AMP', 'CIP',
+                                                  'CTX', 'ERY', 'NAL', 'STR',
+                                                  'NOR', 'OFX', 'CFM', 'FOX',
+                                                  'TET', 'CHL', 'TMP-SMZ'))
+
 
 europe.Campylobacter.plot <- ggbarplot(europe.campy, "antimicrobial_compound", "Mean", 
                                        fill = "farm_type", position = position_dodge(0.7),
-                                       subtitle = "Europe, Campylobacter n= 4966",
+                                       subtitle = "Europe, Campylobacter n = 1,214",
                                        xlab = FALSE, ylab = FALSE,
                                        legend.title = "Farm type",
                                       font.subtitle = "italic")+
+  geom_vline(xintercept = 10.5) +
+  geom_text(data=tibble(x=6, y=100),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=13.2, y=100),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -805,14 +853,28 @@ europe.Campylobacter.plot <- ggbarplot(europe.campy, "antimicrobial_compound", "
 N.A.campylobacter <- CampyMeanDF %>%
   filter(continent == "North America")
 
-N.A.campylobacter<- N.A.campylobacter[order(-N.A.campylobacter$Mean), ]
+
+N.A.campylobacter $antimicrobial_compound <- factor(N.A.campylobacter$antimicrobial_compound, 
+                                              levels=c('AMP', 'AZI', 'CIP', 'CLIN',
+                                                       'ERY', 'KAN', 'NAL', 'NOR',
+                                                       'STR', 'TEL', 'TYL', 'CRO',
+                                                       'SMZ', 'SPT', 'TET'))
+
+
 
 N.A.campylobacter.plot <- ggbarplot(N.A.campylobacter, "antimicrobial_compound", "Mean", 
                                     fill = "farm_type", position = position_dodge(0.7),
-                                    subtitle = "North America, Campylobacter n= 22,586",
+                                    subtitle = "North America, Campylobacter n = 14,607",
                                     xlab = FALSE, ylab = FALSE,
                                     legend.title = "Farm type", 
                                     font.subtitle = "italic")+
+  geom_vline(xintercept = 12.5) +
+  geom_text(data=tibble(x=5.3, y=100),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=15, y=100),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -892,15 +954,28 @@ MrsaMeanDF <- MrsaMeanDF%>%
 europe.MRSA <- MrsaMeanDF %>%
   filter(continent == "Europe")
 
-europe.MRSA<- europe.MRSA[order(-europe.MRSA$Mean), ]
+europe.MRSA $antimicrobial_compound <- factor(europe.MRSA$antimicrobial_compound, 
+                                                    levels=c('AMC', 'AMP', 'APR', 'CEF',
+                                                             'CEQ', 'CLIN', 'CTF', 'ENR',
+                                                             'ERY', 'GEN', 'NEO', 'TIL',
+                                                             'FLO', 'PEN', 'SPT', 'TET',
+                                                             'TIA', 'TMP-SMZ'))
+
 
 europe.MRSA.plot <- ggbarplot(europe.MRSA, "antimicrobial_compound", 
                               "Mean", 
                               fill = "farm_type", position = position_dodge(0.7),
-                              subtitle = "Europe, MRSA n= 2,933",
+                              subtitle = "Europe, MRSA n = 2,933",
                               xlab = FALSE, ylab = FALSE,
                               legend.title = "Farm type", 
                               font.subtitle = "italic")+
+  geom_vline(xintercept = 12.5) +
+  geom_text(data=tibble(x=5.3, y=110),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=14.3, y=110),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -979,15 +1054,31 @@ SaureusMeanDF <- SaureusMeanDF%>%
 europe.saureus <- SaureusMeanDF %>%
   filter(continent == "Europe")
 
-europe.saureus<- europe.saureus[order(-europe.saureus$Mean), ]
+europe.saureus $antimicrobial_compound <- factor(europe.saureus$antimicrobial_compound, 
+                                              levels=c('AMC', 'AMP', 'CIP', 'CLIN',
+                                                       'CLOXA', 'ENR', 'ERY', 'GEN',
+                                                       'KAN', 'LZD', 'RMP', 'STR',
+                                                       'TYC', 'CHL', 'DOX', 'FOX',
+                                                       'FUS', 'LCM', 'NB', 'NIT',
+                                              'OXA', 'PEN', 'Q-D', 'SMZ', 'SPM',
+                                              'TET', 'TIA', 'TMP'))
+                                              
+
 
 europe.s.aureus.plot <- ggbarplot(europe.saureus, "antimicrobial_compound", 
                                   "Mean", 
                                   fill = "farm_type", position = position_dodge(0.7),
-                                  subtitle = "Europe, S.aureus n= 3,950",
+                                  subtitle = "Europe, S.aureus n = 970",
                                   xlab = FALSE, ylab = FALSE,
                                   legend.title = "Farm type",
                                  font.subtitle = "italic")+
+  geom_vline(xintercept = 12.5) +
+  geom_text(data=tibble(x=5.3, y=110),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=17.5, y=110),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -1001,15 +1092,29 @@ europe.s.aureus.plot <- ggbarplot(europe.saureus, "antimicrobial_compound",
 N.A.saureus <- SaureusMeanDF %>%
   filter(continent == "North America")
 
-N.A.saureus<- N.A.saureus[order(-N.A.saureus$Mean), ]
+
+N.A.saureus$antimicrobial_compound <- factor(N.A.saureus$antimicrobial_compound, 
+                                                 levels=c('AMC', 'AMP', 'CIP', 'CLIN',
+                                                          'ERY', 'LVX', 'LCM', 'NB',
+                                                          'PEN', 'SPT', 'TET'))
+
+
+
 
 N.A.saureus.plot <- ggbarplot(N.A.saureus, "antimicrobial_compound",
                               "Mean", 
                              fill = "farm_type", position = position_dodge(0.7),
-                             subtitle = "North America, S.aureus n= 1,521",
+                             subtitle = "North America, S.aureus n = 486",
                              xlab = FALSE, ylab = FALSE,
                              legend.title = "Farm type", 
                              font.subtitle = "italic")+
+  geom_vline(xintercept = 6.5) +
+  geom_text(data=tibble(x=2.5, y=90),
+            aes(x=x, y=y, label="critically important"),
+            inherit.aes=FALSE) +
+  geom_text(data=tibble(x=8.4, y=90),
+            aes(x=x, y=y, label="highly important"), 
+            inherit.aes=FALSE)+
   rotate_x_text(90)+
   geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
                  position = position_dodge(width = 0.7))
@@ -1020,10 +1125,11 @@ N.A.saureus.plot <- ggbarplot(N.A.saureus, "antimicrobial_compound",
 
 ##Putting all plots together using patchwork
 
-continent_plot1 <- (asia.ecoli.plot | europe.ecoli.plot | N.A.ecoli.plot | S.A.ecoli.plot) / 
-                    (oceania.ecoli.plot | asia.salmonella.plot | N.A.salmonella.plot |europe.Campylobacter.plot)/
-                    (N.A.campylobacter.plot | asia.entero.plot | europe.enterococcus.plot | N.A.entero.plot )/
-                    (oceania.enterococcus.plot | europe.s.aureus.plot |N.A.saureus.plot)+
+continent_plot1 <- (europe.Campylobacter.plot | N.A.campylobacter.plot | asia.ecoli.plot)/
+                   (europe.ecoli.plot |N.A.ecoli.plot | S.A.ecoli.plot)/
+                   (oceania.ecoli.plot | asia.entero.plot |europe.enterococcus.plot)/
+                    (N.A.entero.plot | oceania.enterococcus.plot |  asia.salmonella.plot)/ 
+                    (N.A.salmonella.plot | europe.s.aureus.plot |N.A.saureus.plot)+
   plot_annotation(tag_levels = "a",
                   tag_prefix = "(",
                   tag_suffix = ")")+
@@ -1032,8 +1138,13 @@ continent_plot1 <- (asia.ecoli.plot | europe.ecoli.plot | N.A.ecoli.plot | S.A.e
         legend.position = "top")
 
 
-continent_plot1
 
-ggsave(filename = "continents.png",continent_plot1)
+
+
+plot1 <- patchwork::patchworkGrob(continent_plot1)
+p2 <- gridExtra::grid.arrange(plot1, left = "Percentage resistance", bottom = "Antimicrobial")
+
+p2
+#ggsave(filename = "continents.png",continent_plot1)
 
 
