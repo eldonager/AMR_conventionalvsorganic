@@ -5,7 +5,7 @@ library(lmerTest)
 
 df1 <- read.csv("mean.data.csv")
 
-
+df1 <- na.omit(df1)
 
 View(df1)
 names(df1)
