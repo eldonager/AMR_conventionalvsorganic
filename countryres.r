@@ -123,13 +123,9 @@ country.data <- usaMeanDF
 
 
 
-df1 <- AMR.tmp.usa %>%
-  filter(country == "United States of America")%>%
-  select(doi, no_isolates) %>%
-  unique()
 
-df1 <- aggregate(no_isolates~doi, df1, FUN = mean)
-sum(df1$no_isolates)
+
+
 ##usa bar plot
 usa.1 <- usaMeanDF %>%
   filter(country == "United States of America")
