@@ -1,94 +1,94 @@
-"antimicrobial","antimicrobial_compound","antimicrobial_class","who_classification"
-"1","Ampicillin","AMP","Penicillin","Critically important"
-"2","Amoxicillin-clavulanic acid","AMC","Aminopenicillin - betalactamase inhibitors","Critically important"
-"3","Cephalothin","CEF","1st_gen cephalosporin","Highly important"
-"4","Cefoxitin","FOX","2nd_gen cephalosporin","Highly important"
-"5","Ceftiofur","CTF","3rd_gen cephalosporin","Critically important"
-"6","Ceftriaxone","CRO","3rd_gen cephalosporin","Critically important"
-"7","Streptomycin","STR","Aminoglycoside","Critically important"
-"8","Kanamycin","KAN","Aminoglycoside","Critically important"
-"9","Gentamycin","GEN","Aminoglycoside","Critically important"
-"10","Apramycin","APR","Aminoglycoside","Critically important"
-"11","Amikacin","AMK","Aminoglycoside","Critically important"
-"12","Chloromphenicol","CHL","Amphenicol","Highly important"
-"13","Tetracycline","TET","Tetracycline","Highly important"
-"14","Sulfamethaxazole","SMZ","Sulfonamide","Highly important"
-"15","Trimethoprim-Sulfamethaxazole","TMP-SMZ","Sulfonamide","Highly important"
-"16","Nalidixic acid","NAL","Quinolones","Critically important"
-"17","Ciprofloxacin","CIP","Quinolones","Critically important"
-"18","Colistin","CST","Polymyxins","Critically important"
-"19","Florfenicol","FLO","Amphenicol","Highly important"
-"20","Neomycin","NEO","Aminoglycoside","Critically important"
-"21","Penicillin","PEN","Penicillin","Highly important"
-"22","Cloxacillin","CLOXA","Penicillin","Critically important"
-"23","Cefpodoxime","CPDX","3rd_gen cephalosporin","Critically important"
-"24","Meropenem","MER","Carbapenem","Critically important"
-"25","Cefotaxime","CTX","3rd_gen cephalosporin","Critically important"
-"26","Ceftazadime","CAZI","3rd_gen cephalosporin","Critically important"
-"27","Trimethoprim","TMP","Sulfonamide","Highly important"
-"28","Erythromycin","ERY","Macrolide","Critically important"
-"29","Ciprofloxacin","CIP","Aminoglycoside","Critically important"
-"30","Azithromycin","AZI","Macrolide","Critically important"
-"31","Cefomandole","CFM","2nd_gen cephalosporin","Highly important"
-"32","Carbapenems","CBP","Carbapenem","Critically important"
-"33","Novobiocin","NB","Aminocoumarin",NA
-"34","Oxacillin","OXA","Penicillin","Critically important"
-"35","Penicillin-novobiocin","PEN-NB",NA,NA
-"36","Pirlimycin","PIR","Lincosamides","Highly important"
-"37","Clindamycin","CLIN","Macrolide","Critically important"
-"38","Norfloxacin","NOR","Quinolones","Critically important"
-"39","Rifampicin","RMP","Ansamycin","Critically important"
-"40","Vancomycin","VAN","Glycopeptides","Critically important"
-"41","Teicoplanin","TEC","Glycopeptides","Critically important"
-"42","Nitrofurantoin","NIT","Nitrofuran derivatives","Important"
-"43","Quinopristin-dalfopristin","Q-D","Streptogramins","Highly important"
-"44","Tigecycline","TGC","Glycylcyclines","Critically important"
-"45","Linezolid","LZD","Oxazolidinones","Critically important"
-"46","Cefaclor","CEC","2nd_gen cephalosporin","Highly important"
-"47","Cefepime","CEP","4th_gen cephalosporin","Critically important"
-"48","Cefoxitin","COX","2nd_gen cephalosporin","Highly important"
-"49","Ceftiofur","CET","3rd_gen cephalosporin","Critically important"
-"50","Cefuroxime","CXM","2nd_gen cephalosporin","Highly important"
-"51","Colistin","CTL","Polymyxins","Critically important"
-"52","Doxycycline","DOX","Tetracycline","Highly important"
-"53","Enrofloxacin","ENR","Quinolones","Critically important"
-"54","Florfenicol","FLL","Amphenicol","Highly important"
-"55","Imipenem","IMP","Carbapenem","Critically important"
-"56","Mezlocillin","MZL","Penicillin","Critically important"
-"57","Netilmicin","NET","Aminoglycoside","Critically important"
-"58","Piperacilin","PIP","Penicillin","Critically important"
-"59","Spectinomycin","SPT","Aminocyclitols","Important"
-"60","Tobramycin","TOB","Aminoglycoside","Critically important"
-"61","Piperacilin","PIT","Penicillin","Critically important"
-"62","Amoxicillin-clavulanic acid","AMC","Aminopenicillin - betalactamase inhibitors","Highly important"
-"63","Ceftiofur","CEF","3rd_gen cephalosporin","Critically important"
-"64","Ceftriaxone","CTX","3rd_gen cephalosporin","Critically important"
-"65","Sulfisoxazole","SMZ","Sulfonamide","Highly important"
-"66","Ampicillin","AMP","Aminopenicillin - betalactamase inhibitors","Critically important"
-"67","Cephalothin","CEF","3rd_gen cephalosporin","Critically important"
-"68","Ceftriaxone","CTX","1st_gen cephalosporin","Highly important"
-"69","Tylosin","TYL","Macrolide","Critically important"
-"70","Clindamycin","CLI","Lincosamides","Highly important"
-"71","Oxacillin","OXA","Penicillin","Highly important"
-"72","Piperacillin-tazobactam","TZP","Penicillin","Critically important"
-"73","Fosfomycin","FOS","Phosphonic acid derivatives","Critically important"
-"74","Cefalexin","CEX","1st_gen cephalosporin","Highly important"
-"75","Cefquinome","CEQ","4th_gen cephalosporin","Critically important"
-"76","Cefoperazone","CFP","3rd_gen cephalosporin","Critically important"
-"77","Spiramycin","SPM","Macrolide","Critically important"
-"78","Lincomycin","LCM","Lincosamides","Highly important"
-"79","Cefazolin","CFZ","1st_gen cephalosporin","Highly important"
-"80","Tiamulin","TIA","Pleuromutilins","Important"
-"81","Tilmicosin","TIL","Macrolide","Critically important"
-"82","Flavomycin","FLY","Phosphoglycolipids","Not used in humans"
-"83","Daptomycin","DAP","Lipopeptides","Critically important"
-"84","Ofloxacin","OFX","Quinolones","Critically important"
-"85","Gatifloxacin","GFX","Quinolones","Critically important"
-"86","Oxytetracycline","OTC","Tetracycline","Highly important"
-"87","Aztreonam","AZT","Monobactams","Critically important"
-"88","Telithromycin","TEL","Ketolide","Critically important"
-"89","Levofloxacin","LVX","Quinolones","Critically important"
-"90","Mupirocin","MUP","Pseudomonic acids","Highly important"
-"91","Fusidic acid","FUS","Steroids antibacterials","Highly important"
-"92","Moxifloxacin","MOX","Quinolones","Critically important"
-"93","Chlortetracycline","CTET","Tetracycline","Highly important"
+ID,antimicrobial,antimicrobial_compound,antimicrobial_class,who_classification
+1,Ampicillin,AMP,Penicillin,Critically important
+2,Amoxicillin-clavulanic acid,AMC,Aminopenicillin - betalactamase inhibitors,Critically important
+3,Cephalothin,CEF,1st_gen cephalosporin,Highly important
+4,Cefoxitin,FOX,2nd_gen cephalosporin,Highly important
+5,Ceftiofur,CTF,3rd_gen cephalosporin,Critically important
+6,Ceftriaxone,CRO,3rd_gen cephalosporin,Critically important
+7,Streptomycin,STR,Aminoglycoside,Critically important
+8,Kanamycin,KAN,Aminoglycoside,Critically important
+9,Gentamycin,GEN,Aminoglycoside,Critically important
+10,Apramycin,APR,Aminoglycoside,Critically important
+11,Amikacin,AMK,Aminoglycoside,Critically important
+12,Chloromphenicol,CHL,Amphenicol,Highly important
+13,Tetracycline,TET,Tetracycline,Highly important
+14,Sulfamethaxazole,SMZ,Sulfonamide,Highly important
+15,Trimethoprim-Sulfamethaxazole,TMP-SMZ,Sulfonamide,Highly important
+16,Nalidixic acid,NAL,Quinolones,Critically important
+17,Ciprofloxacin,CIP,Quinolones,Critically important
+18,Colistin,CST,Polymyxins,Critically important
+19,Florfenicol,FLO,Amphenicol,Highly important
+20,Neomycin,NEO,Aminoglycoside,Critically important
+21,Penicillin,PEN,Penicillin,Highly important
+22,Cloxacillin,CLOXA,Penicillin,Critically important
+23,Cefpodoxime,CPDX,3rd_gen cephalosporin,Critically important
+24,Meropenem,MER,Carbapenem,Critically important
+25,Cefotaxime,CTX,3rd_gen cephalosporin,Critically important
+26,Ceftazadime,CAZI,3rd_gen cephalosporin,Critically important
+27,Trimethoprim,TMP,Sulfonamide,Highly important
+28,Erythromycin,ERY,Macrolide,Critically important
+29,Ciprofloxacin,CIP,Aminoglycoside,Critically important
+30,Azithromycin,AZI,Macrolide,Critically important
+31,Cefomandole,CFM,2nd_gen cephalosporin,Highly important
+32,Carbapenems,CBP,Carbapenem,Critically important
+33,Novobiocin,NB,Aminocoumarin,NA
+34,Oxacillin,OXA,Penicillin,Critically important
+35,Penicillin-novobiocin,PEN-NB,NA,NA
+36,Pirlimycin,PIR,Lincosamides,Highly important
+37,Clindamycin,CLIN,Macrolide,Critically important
+38,Norfloxacin,NOR,Quinolones,Critically important
+39,Rifampicin,RMP,Ansamycin,Critically important
+40,Vancomycin,VAN,Glycopeptides,Critically important
+41,Teicoplanin,TEC,Glycopeptides,Critically important
+42,Nitrofurantoin,NIT,Nitrofuran derivatives,Important
+43,Quinopristin-dalfopristin,Q-D,Streptogramins,Highly important
+44,Tigecycline,TGC,Glycylcyclines,Critically important
+45,Linezolid,LZD,Oxazolidinones,Critically important
+46,Cefaclor,CEC,2nd_gen cephalosporin,Highly important
+47,Cefepime,CEP,4th_gen cephalosporin,Critically important
+48,Cefoxitin,COX,2nd_gen cephalosporin,Highly important
+49,Ceftiofur,CET,3rd_gen cephalosporin,Critically important
+50,Cefuroxime,CXM,2nd_gen cephalosporin,Highly important
+51,Colistin,CTL,Polymyxins,Critically important
+52,Doxycycline,DOX,Tetracycline,Highly important
+53,Enrofloxacin,ENR,Quinolones,Critically important
+54,Florfenicol,FLL,Amphenicol,Highly important
+55,Imipenem,IMP,Carbapenem,Critically important
+56,Mezlocillin,MZL,Penicillin,Critically important
+57,Netilmicin,NET,Aminoglycoside,Critically important
+58,Piperacilin,PIP,Penicillin,Critically important
+59,Spectinomycin,SPT,Aminocyclitols,Important
+60,Tobramycin,TOB,Aminoglycoside,Critically important
+61,Piperacilin,PIT,Penicillin,Critically important
+62,Amoxicillin-clavulanic acid,AMC,Aminopenicillin - betalactamase inhibitors,Highly important
+63,Ceftiofur,CEF,3rd_gen cephalosporin,Critically important
+64,Ceftriaxone,CTX,3rd_gen cephalosporin,Critically important
+65,Sulfisoxazole,SMZ,Sulfonamide,Highly important
+66,Ampicillin,AMP,Aminopenicillin - betalactamase inhibitors,Critically important
+67,Cephalothin,CEF,3rd_gen cephalosporin,Critically important
+68,Ceftriaxone,CTX,1st_gen cephalosporin,Highly important
+69,Tylosin,TYL,Macrolide,Critically important
+70,Clindamycin,CLI,Lincosamides,Highly important
+71,Oxacillin,OXA,Penicillin,Highly important
+72,Piperacillin-tazobactam,TZP,Penicillin,Critically important
+73,Fosfomycin,FOS,Phosphonic acid derivatives,Critically important
+74,Cefalexin,CEX,1st_gen cephalosporin,Highly important
+75,Cefquinome,CEQ,4th_gen cephalosporin,Critically important
+76,Cefoperazone,CFP,3rd_gen cephalosporin,Critically important
+77,Spiramycin,SPM,Macrolide,Critically important
+78,Lincomycin,LCM,Lincosamides,Highly important
+79,Cefazolin,CFZ,1st_gen cephalosporin,Highly important
+80,Tiamulin,TIA,Pleuromutilins,Important
+81,Tilmicosin,TIL,Macrolide,Critically important
+82,Flavomycin,FLY,Phosphoglycolipids,Not used in humans
+83,Daptomycin,DAP,Lipopeptides,Critically important
+84,Ofloxacin,OFX,Quinolones,Critically important
+85,Gatifloxacin,GFX,Quinolones,Critically important
+86,Oxytetracycline,OTC,Tetracycline,Highly important
+87,Aztreonam,AZT,Monobactams,Critically important
+88,Telithromycin,TEL,Ketolide,Critically important
+89,Levofloxacin,LVX,Quinolones,Critically important
+90,Mupirocin,MUP,Pseudomonic acids,Highly important
+91,Fusidic acid,FUS,Steroids antibacterials,Highly important
+92,Moxifloxacin,MOX,Quinolones,Critically important
+93,Chlortetracycline,CTET,Tetracycline,Highly important
