@@ -1,0 +1,71 @@
+---
+title: "acronyms"
+author: "Eldon"
+date: "2022-09-08"
+output: html_document
+keep_md: yes  
+---
+```{r load-packages, include=FALSE}
+library(kableExtra)
+library(tinytex)
+library(AER)
+library(tidyverse)
+
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+``` {r drugacronyms,echo=FALSE, fig.height=10, fig.width=5, message=FALSE}
+library(kableExtra)
+library(tinytex)
+library(AER)
+#Load data
+
+main_data <- read_csv("conv.csv")
+
+data1 <- main_data%>%
+  mutate(
+    continent =
+      ifelse(continent == "Oceania", 
+             "New Zealand", continent
+      )
+  )
+
+
+
+
+
+data2 <- main_data %>%
+  filter(pathogen == "Campylobacter" | pathogen == "E.coli" | pathogen == "Salmonella" |
+           pathogen == "S.aureus" | pathogen == "Enterococcus") %>%
+  select("antimicrobial_compound",
+         "antimicrobial_class",
+         "who_classification",
+         "antimicrobial")
+
+
+data3 <- data2 %>%
+  select(antimicrobial,antimicrobial_compound, antimicrobial_class,
+         who_classification) %>%
+  filter(antimicrobial_compound != "AZT", antimicrobial_compound != "CBP",
+         antimicrobial_compound != "CEX", antimicrobial_compound != "CFM",
+         antimicrobial_compound != "CEQ", antimicrobial_compound != "DAP",
+         antimicrobial_compound != "MOX", antimicrobial_compound != "MUP",
+         antimicrobial_compound != "NET", antimicrobial_compound != "PIR",
+         antimicrobial_compound != "TEC", antimicrobial_compound != "TEL",
+         antimicrobial_compound != "TOB") %>%
+  unique() %>%
+  arrange(antimicrobial)
+
+
+  data4 <- knitr::kable(data3, "html", "simple", col.names = c("Antimicrobial", "Acronym", "Antimicrobial class", "WHO classification"), align=c("l", "c", "c", "c")) 
+
+  data4 
+  
+```
+
+
