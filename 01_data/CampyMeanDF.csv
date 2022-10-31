@@ -1,0 +1,49 @@
+"antimicrobial_compound","farm_type","continent","Mean","no_isolates","CILow","CIHigh"
+"AMK","Conventional","Europe",15,82,7,23
+"AMP","Conventional","Europe",66,82,56,76
+"CFM","Conventional","Europe",43,82,32,54
+"CIP","Conventional","Europe",38,666,34,42
+"CTX","Conventional","Europe",5,82,0,10
+"ERY","Conventional","Europe",29,666,26,32
+"FOX","Conventional","Europe",27,82,17,37
+"NAL","Conventional","Europe",36,584,32,40
+"STR","Conventional","Europe",46,584,42,50
+"TET","Conventional","Europe",48,666,44,52
+"AMC","Organic","Europe",42,43,27,57
+"AMP","Organic","Europe",79,43,67,91
+"CHL","Organic","Europe",14,139,8,20
+"CIP","Organic","Europe",30,753,27,33
+"ERY","Organic","Europe",12,753,10,14
+"NAL","Organic","Europe",30,753,27,33
+"NOR","Organic","Europe",91,43,82,100
+"OFX","Organic","Europe",91,43,82,100
+"STR","Organic","Europe",44,680,40,48
+"TET","Organic","Europe",39,723,35,43
+"TMP-SMZ","Organic","Europe",26,43,13,39
+"AMP","Conventional","North America",13,3418,12,14
+"AZI","Conventional","North America",14,4901,13,15
+"CIP","Conventional","North America",15,8674,14,16
+"CLIN","Conventional","North America",12,5825,11,13
+"ERY","Conventional","North America",33,8674,32,34
+"KAN","Conventional","North America",42,3418,40,44
+"NAL","Conventional","North America",16,7779,15,17
+"NOR","Conventional","North America",59,1388,56,62
+"SMZ","Conventional","North America",37,2030,35,39
+"SPT","Conventional","North America",13,360,10,16
+"STR","Conventional","North America",2,2030,1,3
+"TEL","Conventional","North America",15,1495,13,17
+"TET","Conventional","North America",73,8674,72,74
+"TYL","Conventional","North America",36,360,31,41
+"AMP","Organic","North America",6,3472,5,7
+"AZI","Organic","North America",15,4854,14,16
+"CIP","Organic","North America",2,7691,2,2
+"CLIN","Organic","North America",5,4842,4,6
+"CRO","Organic","North America",2,2030,1,3
+"ERY","Organic","North America",16,7691,15,17
+"KAN","Organic","North America",29,3418,27,31
+"NAL","Organic","North America",4,6796,4,4
+"SMZ","Organic","North America",39,2030,37,41
+"SPT","Organic","North America",10,360,7,13
+"TEL","Organic","North America",21,1066,19,23
+"TET","Organic","North America",53,7691,52,54
+"TYL","Organic","North America",17,360,13,21

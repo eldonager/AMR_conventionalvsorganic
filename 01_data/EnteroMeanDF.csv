@@ -1,0 +1,81 @@
+"antimicrobial_compound","farm_type","continent","Mean","no_isolates","CILow","CIHigh"
+"CIP","Conventional","Asia",31,52,18,44
+"ERY","Conventional","Asia",44,52,31,57
+"GEN","Conventional","Asia",6,52,0,12
+"LZD","Conventional","Asia",4,52,0,9
+"NIT","Conventional","Asia",10,52,2,18
+"Q-D","Conventional","Asia",33,52,20,46
+"RMP","Conventional","Asia",46,52,32,60
+"TET","Conventional","Asia",67,52,54,80
+"CIP","Organic","Asia",10,52,2,18
+"ERY","Organic","Asia",17,52,7,27
+"GEN","Organic","Asia",2,52,0,6
+"NIT","Organic","Asia",2,52,0,6
+"Q-D","Organic","Asia",35,52,22,48
+"RMP","Organic","Asia",40,52,27,53
+"TET","Organic","Asia",77,52,66,88
+"AMP","Conventional","Europe",14,284,10,18
+"CHL","Conventional","Europe",2,284,0,4
+"CIP","Conventional","Europe",11,284,7,15
+"DOX","Conventional","Europe",44,284,38,50
+"ERY","Conventional","Europe",28,284,23,33
+"FOS","Conventional","Europe",6,164,2,10
+"GEN","Conventional","Europe",6,284,3,9
+"IMP","Conventional","Europe",6,164,2,10
+"NIT","Conventional","Europe",3,284,1,5
+"RMP","Conventional","Europe",5,164,2,8
+"STR","Conventional","Europe",26,164,19,33
+"TYL","Conventional","Europe",38,164,31,45
+"VAN","Conventional","Europe",5,284,2,8
+"AMP","Organic","Europe",8,284,5,11
+"CIP","Organic","Europe",3,284,1,5
+"DOX","Organic","Europe",23,284,18,28
+"ERY","Organic","Europe",17,284,13,21
+"FOS","Organic","Europe",4,164,1,7
+"GEN","Organic","Europe",2,284,0,4
+"IMP","Organic","Europe",4,164,1,7
+"RMP","Organic","Europe",18,164,12,24
+"STR","Organic","Europe",10,164,5,15
+"TYL","Organic","Europe",14,164,9,19
+"AMK","Conventional","North America",3,530,2,4
+"AMP","Conventional","North America",3,530,2,4
+"CEC","Conventional","North America",2,530,1,3
+"CHL","Conventional","North America",2,843,1,3
+"CIP","Conventional","North America",14,313,10,18
+"ERY","Conventional","North America",20,843,17,23
+"FLY","Conventional","North America",29,87,19,39
+"FOX","Conventional","North America",4,530,2,6
+"GEN","Conventional","North America",24,313,19,29
+"KAN","Conventional","North America",14,843,12,16
+"LCM","Conventional","North America",98,87,95,100
+"LZD","Conventional","North America",12,226,8,16
+"NIT","Conventional","North America",11,313,8,14
+"PEN","Conventional","North America",10,843,8,12
+"Q-D","Conventional","North America",17,87,9,25
+"STR","Conventional","North America",15,843,13,17
+"TET","Conventional","North America",32,843,29,35
+"TGC","Conventional","North America",12,313,8,16
+"TYL","Conventional","North America",38,226,32,44
+"AMC","Organic","North America",3,530,2,4
+"AMK","Organic","North America",5,530,3,7
+"AMP","Organic","North America",2,530,1,3
+"AZI","Organic","North America",2,530,1,3
+"CEC","Organic","North America",3,530,2,4
+"CIP","Organic","North America",14,81,6,22
+"ERY","Organic","North America",18,611,15,21
+"FLY","Organic","North America",19,81,10,28
+"FOX","Organic","North America",3,530,2,4
+"KAN","Organic","North America",9,611,7,11
+"LCM","Organic","North America",89,81,82,96
+"NIT","Organic","North America",12,81,5,19
+"PEN","Organic","North America",9,611,7,11
+"Q-D","Organic","North America",48,81,37,59
+"STR","Organic","North America",23,611,20,26
+"TET","Organic","North America",21,611,18,24
+"TGC","Organic","North America",16,81,8,24
+"CIP","Conventional","Oceania",84,1059,82,86
+"GEN","Conventional","Oceania",66,1059,63,69
+"NEO","Conventional","Oceania",78,1059,76,80
+"TET","Conventional","Oceania",56,1059,53,59
+"CIP","Organic","Oceania",2,353,1,3
+"NEO","Organic","Oceania",6,353,4,8

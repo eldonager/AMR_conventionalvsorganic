@@ -1,0 +1,150 @@
+"antimicrobial_compound","farm_type","continent","Mean","no_isolates","CILow","CIHigh"
+"AMC","Conventional","Asia",98,110,95,100
+"CST","Conventional","Asia",2,110,0,5
+"DOX","Conventional","Asia",57,110,48,66
+"GEN","Conventional","Asia",24,110,16,32
+"KAN","Conventional","Asia",15,110,8,22
+"NEO","Conventional","Asia",30,110,21,39
+"TMP-SMZ","Conventional","Asia",80,110,73,87
+"AMC","Organic","Asia",98,105,95,100
+"DOX","Organic","Asia",58,105,49,67
+"GEN","Organic","Asia",7,105,2,12
+"KAN","Organic","Asia",13,105,7,19
+"NEO","Organic","Asia",15,105,8,22
+"TMP-SMZ","Organic","Asia",57,105,48,66
+"AMC","Conventional","Europe",31,1609,29,33
+"AMP","Conventional","Europe",33,11103,32,34
+"APR","Conventional","Europe",2,533,1,3
+"AZI","Conventional","Europe",7,116,2,12
+"CAZI","Conventional","Europe",3,3261,2,4
+"CEC","Conventional","Europe",20,533,17,23
+"CEF","Conventional","Europe",25,882,22,28
+"CFP","Conventional","Europe",3,274,1,5
+"CFZ","Conventional","Europe",71,607,67,75
+"CHL","Conventional","Europe",9,4721,8,10
+"CIP","Conventional","Europe",43,10916,42,44
+"CST","Conventional","Europe",5,3071,4,6
+"CTX","Conventional","Europe",3,4362,2,4
+"CXM","Conventional","Europe",14,1195,12,16
+"DOX","Conventional","Europe",27,1201,24,30
+"ENR","Conventional","Europe",28,921,25,31
+"FOX","Conventional","Europe",3,533,2,4
+"GEN","Conventional","Europe",8,5418,7,9
+"IMP","Conventional","Europe",2,533,1,3
+"KAN","Conventional","Europe",33,247,27,39
+"MZL","Conventional","Europe",17,533,14,20
+"NAL","Conventional","Europe",46,9601,45,47
+"NEO","Conventional","Europe",5,807,3,7
+"NIT","Conventional","Europe",11,659,9,13
+"PIP","Conventional","Europe",8,1066,6,10
+"SMZ","Conventional","Europe",37,9713,36,38
+"SPT","Conventional","Europe",26,533,22,30
+"STR","Conventional","Europe",35,4440,34,36
+"TET","Conventional","Europe",28,9875,27,29
+"TGC","Conventional","Europe",10,116,5,15
+"TMP","Conventional","Europe",22,9406,21,23
+"TMP-SMZ","Conventional","Europe",20,2098,18,22
+"TZP","Conventional","Europe",13,60,4,22
+"AMC","Organic","Europe",17,1353,15,19
+"AMK","Organic","Europe",2,766,1,3
+"AMP","Organic","Europe",21,10715,20,22
+"APR","Organic","Europe",2,533,1,3
+"AZI","Organic","Europe",10,116,5,15
+"CEC","Organic","Europe",4,533,2,6
+"CEF","Organic","Europe",22,529,18,26
+"CFZ","Organic","Europe",59,387,54,64
+"CHL","Organic","Europe",6,4706,5,7
+"CIP","Organic","Europe",21,10482,20,22
+"CST","Organic","Europe",4,3118,3,5
+"CTX","Organic","Europe",3,4414,2,4
+"CXM","Organic","Europe",9,863,7,11
+"DOX","Organic","Europe",13,965,11,15
+"ENR","Organic","Europe",3,630,2,4
+"FOS","Organic","Europe",3,259,1,5
+"FOX","Organic","Europe",4,533,2,6
+"GEN","Organic","Europe",4,4943,3,5
+"IMP","Organic","Europe",4,533,2,6
+"KAN","Organic","Europe",28,294,23,33
+"MZL","Organic","Europe",8,533,6,10
+"NAL","Organic","Europe",24,9654,23,25
+"NIT","Organic","Europe",12,492,9,15
+"PIP","Organic","Europe",2,1066,1,3
+"SMZ","Organic","Europe",26,9652,25,27
+"SPT","Organic","Europe",21,533,18,24
+"STR","Organic","Europe",22,4530,21,23
+"TET","Organic","Europe",27,9886,26,28
+"TGC","Organic","Europe",21,116,14,28
+"TMP","Organic","Europe",12,9453,11,13
+"TMP-SMZ","Organic","Europe",4,2062,3,5
+"TZP","Organic","Europe",13,60,4,22
+"AMC","Conventional","North America",3,11644,3,3
+"AMP","Conventional","North America",9,11628,8,10
+"CEF","Conventional","North America",5,10886,5,5
+"CHL","Conventional","North America",4,11644,4,4
+"CTET","Conventional","North America",70,491,66,74
+"ERY","Conventional","North America",77,905,74,80
+"GEN","Conventional","North America",3,11884,3,3
+"KAN","Conventional","North America",6,11644,6,6
+"NAL","Conventional","North America",2,11567,2,2
+"NEO","Conventional","North America",57,731,53,61
+"PEN","Conventional","North America",95,240,92,98
+"SMZ","Conventional","North America",17,11807,16,18
+"SPT","Conventional","North America",16,240,11,21
+"STR","Conventional","North America",17,11644,16,18
+"TET","Conventional","North America",46,11884,45,47
+"TYL","Conventional","North America",64,491,60,68
+"AMP","Organic","North America",5,11239,5,5
+"CEF","Organic","North America",5,10501,5,5
+"CHL","Organic","North America",3,11255,3,3
+"CTET","Organic","North America",30,491,26,34
+"ERY","Organic","North America",60,905,57,63
+"GEN","Organic","North America",3,11495,3,3
+"KAN","Organic","North America",3,11255,3,3
+"NAL","Organic","North America",4,11182,4,4
+"NEO","Organic","North America",20,731,17,23
+"PEN","Organic","North America",100,240,100,100
+"SMZ","Organic","North America",12,11422,11,13
+"SPT","Organic","North America",14,240,10,18
+"STR","Organic","North America",11,11255,10,12
+"TET","Organic","North America",33,11495,32,34
+"TYL","Organic","North America",36,491,32,40
+"AMP","Conventional","Oceania",4,1125,3,5
+"CHL","Conventional","Oceania",3,3256,2,4
+"CPDX","Conventional","Oceania",3,3256,2,4
+"FOX","Conventional","Oceania",17,3256,16,18
+"MER","Conventional","Oceania",11,3256,10,12
+"STR","Conventional","Oceania",25,1125,22,28
+"TET","Conventional","Oceania",19,4381,18,20
+"TMP-SMZ","Conventional","Oceania",9,1125,7,11
+"CPDX","Organic","Oceania",4,3256,3,5
+"FOX","Organic","Oceania",16,3256,15,17
+"MER","Organic","Oceania",4,3256,3,5
+"NEO","Organic","Oceania",2,375,1,3
+"STR","Organic","Oceania",4,375,2,6
+"TET","Organic","Oceania",3,3631,2,4
+"AMC","Conventional","South America",23,156,16,30
+"AMP","Conventional","South America",67,156,60,74
+"CAZI","Conventional","South America",5,156,2,8
+"CFZ","Conventional","South America",49,156,41,57
+"CHL","Conventional","South America",17,156,11,23
+"CIP","Conventional","South America",38,156,30,46
+"CTX","Conventional","South America",33,156,26,40
+"ENR","Conventional","South America",39,156,31,47
+"FOX","Conventional","South America",8,156,4,12
+"GEN","Conventional","South America",24,156,17,31
+"NAL","Conventional","South America",79,156,73,85
+"NIT","Conventional","South America",9,156,5,13
+"NOR","Conventional","South America",26,156,19,33
+"TET","Conventional","South America",91,156,87,95
+"TMP-SMZ","Conventional","South America",44,156,36,52
+"AMP","Organic","South America",18,156,12,24
+"CFZ","Organic","South America",3,156,0,6
+"CHL","Organic","South America",3,156,0,6
+"CIP","Organic","South America",2,156,0,4
+"ENR","Organic","South America",3,156,0,6
+"GEN","Organic","South America",3,156,0,6
+"NAL","Organic","South America",15,156,9,21
+"NIT","Organic","South America",3,156,0,6
+"NOR","Organic","South America",3,156,0,6
+"TET","Organic","South America",60,156,52,68
+"TMP-SMZ","Organic","South America",29,156,22,36

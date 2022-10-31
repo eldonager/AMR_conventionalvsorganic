@@ -1,0 +1,19 @@
+"antimicrobial_compound","farm_type","continent","Mean","no_isolates","CILow","CIHigh"
+"AMP","Conventional","Asia",57,162,49,65
+"CLOXA","Conventional","Asia",14,162,9,19
+"GEN","Conventional","Asia",100,162,100,100
+"PEN","Conventional","Asia",29,162,22,36
+"STR","Conventional","Asia",14,162,9,19
+"TMP-SMZ","Conventional","Asia",57,162,49,65
+"AMP","Organic","Asia",17,162,11,23
+"GEN","Organic","Asia",33,162,26,40
+"PEN","Organic","Asia",17,162,11,23
+"TMP-SMZ","Organic","Asia",17,162,11,23
+"ERY","Conventional","North America",22,166,16,28
+"PEN","Conventional","North America",19,166,13,25
+"PIR","Conventional","North America",14,166,9,19
+"TET","Conventional","North America",18,166,12,24
+"ERY","Organic","North America",11,239,7,15
+"PEN","Organic","North America",16,239,11,21
+"PIR","Organic","North America",2,239,0,4
+"TET","Organic","North America",8,239,5,11

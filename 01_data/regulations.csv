@@ -1,0 +1,86 @@
+Continent,Country,Status,
+Europe,Austria,Fully implemented,[1]
+Europe,Belgium,Fully implemented,[2]
+Europe,Bulgaria,Fully implemented,[3]
+Europe,Croatia,Fully implemented,[4]
+Europe,Cyprus,Fully implemented,[5]
+Europe,Czech Republic,Fully implemented,[6]
+Europe,Denmark,Fully implemented,[7]
+Europe,Estonia,Fully implemented,[8]
+Europe,Finland,Fully implemented,[9]
+Europe,France,Fully implemented,[10]
+Europe,Germany,Fully implemented,[11]
+Europe,Greece,Fully implemented,[12]
+Europe,Hungary,Fully implemented,[13]
+Europe,Ireland,Fully implemented,[14]
+Europe,Italy,Fully implemented,[15]
+Europe,Latvia,Fully implemented,[17]
+Europe,Lithuania,Fully implemented,[18]
+Europe,Luxembourg,Fully implemented,[19]
+Europe,Malta,Fully implemented,[20]
+Europe,Poland,Fully implemented,[21]
+Europe,Portugal,Fully implemented,[22]
+Europe,Romania,Fully implemented,[23]
+Europe,Slovak Republic,Fully implemented,[24]
+Europe,Slovenia,Fully implemented,[25]
+Europe,Spain,Fully implemented,[26]
+Europe,Sweden,Fully implemented,[27]
+Europe,Netherlands,Fully implemented,[28]
+Europe,Albania,Not fully implemented,
+Europe,Iceland,Fully implemented,[29]
+Europe,Macedonia,Fully implemented,
+Europe,Moldova,Fully implemented,
+Europe,Montenegro,Fully implemented,[30]
+Europe,Norway,Fully implemented,
+Europe,Serbia,Not fully implemented,
+Europe,Switzerland,Fully implemented,[31]
+Europe,Turkey,Fully implemented,
+Europe,United Kingdom,Fully implemented,[32]
+Oceania,Australia,Only export regulations,[33]
+Asia,Bangladesh,Not fully implemented,
+Asia,Singapore,Only export regulations,[70]
+Asia,Bhutan,Not fully implemented,
+Asia,China,Fully implemented,
+Asia,India,Fully implemented,[34]
+Asia,Cambodia,Fully implemented,
+Asia,Israel,Fully implemented,
+Asia,Japan,Fully implemented,[35]
+Oceania,New Zealand,Only export regulations,
+Asia,Philippines,Not fully implemented,
+Asia,South Korea,Fully implemented,
+Asia,Taiwan,Fully implemented,
+Asia,Thailand,Fully implemented,[36]
+South America,Argentina,Fully implemented,
+South America,Bolivia,Not fully implemented,[37]
+South America,Brazil,Fully implemented,[38]
+North America,Canada,Fully Implemented,[39]
+South America,Chile,Fully implemented,
+North America,Costa Rica,National regulations not fully implemented,[40]
+North America,Dominican Republic,Not fully implemented,
+South America,Ecuador,Fully implemented,[41]
+North America,El Salvador,Not fully implemented,[42]
+North America,Honduras,Fully implemented,[43]
+North America,Mexico,Fully implemented,[44]
+South America,Paraguay,Not fully implemented,
+South America,Peru,Not fully implemented,
+North America,United States of America,Fully implemented,[45]
+Africa,Ghana,Not fully implemented,
+Africa,Tunisia,Fully implemented,
+Europe,Bosnia Herzegovina,Regulations in development,
+Europe,Russia,Fully implemented,
+Europe,Ukraine,Regulations in development,
+Asia,Armenia,Regulations in development,
+Asia,Azerbaijan,Regulations in development,
+Asia,Georgia,Regulations in development,[2]
+Asia,Hong Kong,Regulations in development,
+Asia,Indonesia,Regulations in development,
+Asia,Lebanon,Regulations in development,
+Asia,Saudi Arabia,Regulations in development,
+Asia,Vietnam,Regulations in development,
+North America,Cuba,Regulations in development,
+North America,Nicaragua,Regulations in development,
+North America,St. Lucia,Regulations in development,
+Africa,Cameroon,Regulations in development,
+Africa,Egypt,Regulations in development,
+Africa,Madagascar,Regulations in development,
+Africa,South Africa,Regulations in development,[3]

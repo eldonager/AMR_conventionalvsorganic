@@ -1,0 +1,67 @@
+"antimicrobial_compound","farm_type","continent","Mean","no_isolates","CILow","CIHigh"
+"AMC","Conventional","Europe",29,133,21,37
+"AMP","Conventional","Europe",75,100,67,83
+"CHL","Conventional","Europe",3,262,1,5
+"CIP","Conventional","Europe",18,229,13,23
+"CLIN","Conventional","Europe",42,262,36,48
+"CLOXA","Conventional","Europe",12,100,6,18
+"DOX","Conventional","Europe",23,293,18,28
+"ENR","Conventional","Europe",2,133,0,4
+"ERY","Conventional","Europe",19,362,15,23
+"FOX","Conventional","Europe",100,36,100,100
+"FUS","Conventional","Europe",6,36,0,14
+"GEN","Conventional","Europe",2,362,1,3
+"KAN","Conventional","Europe",6,136,2,10
+"LCM","Conventional","Europe",25,100,17,33
+"LZD","Conventional","Europe",3,36,0,9
+"NB","Conventional","Europe",12,100,6,18
+"NIT","Conventional","Europe",19,193,13,25
+"OXA","Conventional","Europe",47,226,40,54
+"PEN","Conventional","Europe",67,261,61,73
+"Q-D","Conventional","Europe",20,69,11,29
+"RMP","Conventional","Europe",6,128,2,10
+"SMZ","Conventional","Europe",26,229,20,32
+"SPM","Conventional","Europe",12,100,6,18
+"STR","Conventional","Europe",33,36,18,48
+"TET","Conventional","Europe",28,169,21,35
+"TIA","Conventional","Europe",39,36,23,55
+"TMP","Conventional","Europe",12,136,7,17
+"TYL","Conventional","Europe",12,100,6,18
+"AMP","Organic","Europe",28,193,22,34
+"CHL","Organic","Europe",6,233,3,9
+"CIP","Organic","Europe",10,373,7,13
+"CLIN","Organic","Europe",40,233,34,46
+"DOX","Organic","Europe",13,468,10,16
+"ENR","Organic","Europe",2,146,0,4
+"ERY","Organic","Europe",10,333,7,13
+"GEN","Organic","Europe",5,519,3,7
+"KAN","Organic","Europe",3,105,0,6
+"NIT","Organic","Europe",10,182,6,14
+"OXA","Organic","Europe",34,228,28,40
+"PEN","Organic","Europe",28,242,22,34
+"Q-D","Organic","Europe",4,51,0,9
+"RMP","Organic","Europe",2,96,0,5
+"SMZ","Organic","Europe",34,280,28,40
+"TET","Organic","Europe",3,151,0,6
+"TMP","Organic","Europe",2,105,0,5
+"AMC","Conventional","North America",3,108,0,6
+"AMP","Conventional","North America",38,117,29,47
+"CIP","Conventional","North America",7,108,2,12
+"CLIN","Conventional","North America",33,108,24,42
+"ERY","Conventional","North America",32,225,26,38
+"LCM","Conventional","North America",80,108,72,88
+"LVX","Conventional","North America",7,108,2,12
+"NB","Conventional","North America",50,117,41,59
+"PEN","Conventional","North America",47,225,40,54
+"SPT","Conventional","North America",73,108,65,81
+"TET","Conventional","North America",45,225,38,52
+"AMP","Organic","North America",19,144,13,25
+"CIP","Organic","North America",14,108,7,21
+"CLIN","Organic","North America",14,117,8,20
+"ERY","Organic","North America",6,261,3,9
+"LCM","Organic","North America",10,117,5,15
+"LVX","Organic","North America",10,117,5,15
+"NB","Organic","North America",44,144,36,52
+"PEN","Organic","North America",56,261,50,62
+"SPT","Organic","North America",10,117,5,15
+"TET","Organic","North America",5,261,2,8

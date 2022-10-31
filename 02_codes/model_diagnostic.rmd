@@ -1,0 +1,115 @@
+---
+title: "model diagnostics"
+author: "Eldon"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r load-packages, include=FALSE}
+library(tidyverse)
+library(lme4)
+library(lmerTest)
+library(Matrix)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Model diagnostics
+
+##### Assumptions
+
+Linear mixed effects models are based on the following assumptions;
+
+1. Independent variables measured without an error (Fixed x)
+2. Errors are normally distributed
+3. Errors are independent
+4. Errors have constant variance
+5. Relationship between X and Y is linear
+
+
+We used the graphs to determine whether the model assumptions are met
+
+
+1. Turkey-Anscombe plot
+
+```{r continent, echo=FALSE, fig.height=4, fig.width=8, message=FALSE}
+
+continent_model <- read_csv("continent_model.csv")
+
+
+continent_model$continent <- as.factor(continent_model$continent)
+continent_model$doi <- as.factor(continent_model$doi)
+continent_model$farm_type <- as.factor(continent_model$farm_type)
+continent_model$host <- as.factor(continent_model$host)
+continent_model$antimicrobial_compound<- as.factor(continent_model$antimicrobial_compound)
+continent_model$pathogen <- as.factor(continent_model$pathogen)
+
+require(lattice)
+mod.0 <- lmer(percent_resistant ~ farm_type * host+ (1 | continent/doi/
+                                                       antimicrobial_compound/
+                                                       pathogen), data = continent_model)
+
+
+p1<- plot(mod.0, type = c("p", "smooth"), col.line = "black")
+print(p1)
+
+```
+
+
+
+The above figure, demonstrates homoscedasticity (stable variance) meaning the variance of the residuals does not seem to increase or decrease with the fitted values
+
+2)	Quantile-quantile (Q-Q) plots 
+We assumed that both the errors and the random intercepts come from a normal distribution and used Q-Q plot to test this.
+
+
+```{r qqnorm, echo=FALSE, fig.height=4, fig.width=8, message=FALSE}
+
+ qqnorm(residuals(mod.0))
+
+qqline(residuals(mod.0))
+
+```
+
+
+
+The QQ-plot above shows that there is no clear evidence that the our data does not follow a normal distribution. Although not perfect, this plot does not show a clear violation of the normality assumption for the random effects.
+
+
+###### 3.Residuals against predictors
+
+
+```{r p4,echo=FALSE, fig.height=3, fig.width=8, message=FALSE}
+p4 <- xyplot(resid(mod.0) ~ farm_type, data = continent_model, jitter.x = TRUE,
+       abline = 0, type = c("p", "g"))
+       
+ p4
+```
+
+The figure above indicates that residuals on conventional farms have a higher variance as compared to organic farms, nevertheless, the is no dramatic difference between the two farm types.
+To better identify deviations from linearity we add a line connecting the average values at each host. We then plot the residuals against the host.
+
+
+```{r host,echo=FALSE, fig.height=3, fig.width=8, message=FALSE, warning=FALSE}
+xyplot(resid(mod.0) ~ host, data = continent_model, abline = 0, type = c("p", "smooth", "g"))
+
+```
+
+There seems to be no clear deviation from zero. This implies that at this stage there is no evidence against percent resistance of modelled hosts. Moreover, the variance of the residuals seems to be constant along the five-time points (hosts)  (i.e homoscedasticity).
+We used the dot plot below to check whether all studies have similar variances.
+
+
+```{r doi,echo=FALSE, fig.height=15, fig.width=8, message=FALSE, warning=FALSE}
+dotplot(doi ~ resid(mod.0), data = continent_model, abline = list(v = 0))
+
+```
+
+
+The above dot plot shows that there is no striking difference in variability among the studies. 
+
+
+
+
+
