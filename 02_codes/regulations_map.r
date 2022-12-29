@@ -68,7 +68,7 @@ plot(reg_data1[, c("Status")])
 
 
 
-plot1 <- tm_shape(reg_data1) + 
+plot1 <- tm_shape(w_cup1) + 
   tm_polygons(col = "Status",  
               projection = 3857, midpoint = 0)+
   tm_text("iso_a3", size = "AREA")+
@@ -76,5 +76,9 @@ tm_style("white") +
   tmap_options(check.and.fix = TRUE)
 
 
+
+tm_shape(w_cup1) +   
+   
+  tm_dots(size = 0.2) 
 
 

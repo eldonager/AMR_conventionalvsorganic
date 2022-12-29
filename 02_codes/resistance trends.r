@@ -16,11 +16,15 @@ data1 <- main_data %>%
          "sampling_end_date", "mean")
 
 
+
+
 data2 <- filter(data1, !is.na(data1$sampling_end_date))
  
 
+data3 <-aggregate(mean~doi+farm_type+sampling_end_date, data2, mean)%>%
+  arrange(doi,farm_type,sampling_end_date)
 
-data3 <-aggregate(mean~doi+farm_type+sampling_end_date, data2, mean)
+
 
 
 #changing percentage resistance into numeric class and rounding off  
