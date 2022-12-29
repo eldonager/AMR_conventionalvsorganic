@@ -1,0 +1,1766 @@
+---
+title: "Antimicrobial Resistance in Organic and Conventional farms: A sytemic literature review"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+keep_md: yes   
+---
+
+```{r load-packages, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(patchwork)
+library(scales)
+library(wesanderson)
+library(ggpubr)
+library(gridExtra)
+pacman::p_load(grid,gridtext)
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                    dev = "pdf",
+                   dpi = 300,
+                     echo = FALSE,
+                    cache = TRUE)
+```
+
+
+```{r PlotTheme, include = FALSE, echo = FALSE}
+  singlefigtheme <- theme_classic() + 
+                    theme(text = element_text(size = 10), # change size of panel label
+                       axis.title.y = element_text(size = 12),
+                       axis.text.y = element_text(size = 12),
+                       axis.title.x = element_text(size = 12),
+                       axis.text.x = element_text(size = 12),
+                       legend.title = element_text(size = 12),
+                       axis.title = element_text(size = 12)) + # change size of x and y-axis titles) + 
+                  theme(legend.position = "") +
+                  theme(panel.spacing = unit(1.05, "lines"),
+                   panel.border = element_rect(color = "black", 
+                   fill = NA, size = 0.05))+
+                   theme(panel.grid.major = element_blank(), 
+                   panel.grid.minor = element_blank(),
+                   panel.background = element_blank(), 
+                   axis.line = element_line(size = 0.05, colour = "black"))
+
+
+
+```
+
+
+### Plot showing the number of surveys covered in the study
+
+```{r no_studies, echo=FALSE, fig.height=5, fig.width=7, message=FALSE}
+#Load data
+main_data <- read_csv("conv.csv")
+
+
+data1 <- main_data %>%
+  select(doi, continent, year)
+
+data2 <- data1 %>%
+  group_by(continent)%>%
+  count(doi, year)
+
+data3 <- data2 %>%
+  select(continent, year)
+
+
+data4<- data3 %>%
+  count(continent, year)
+
+p1<- ggbarplot(data4, "year", 
+          "n", 
+          fill = "continent",
+          subtitle = "",
+          xlab = "Year of publication", ylab = "Number of publications",
+          legend.title = "Continent",
+          font.subtitle = "italic",
+          font.family = c("arial", size=9),
+          font.x =c(12), font.y =c(12))+
+  scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  rotate_x_text(60)+
+ font("xlab", size = 12)+
+ font("ylab", size = 12)+
+ font("xy.text", size = 12)+
+  font("legend.title",size = 12)+
+  font("legend.text", size = 12)
+
+p1
+```
+
+### Antimicrobial resistance trends across the years in Organic and conventional farms
+
+
+
+
+```{r trends, echo=FALSE, fig.height=10, fig.width=15, message=FALSE}
+
+#Load data
+main_data <- read_csv("mean.data.csv")
+
+data1 <- main_data %>%
+  select("antimicrobial", "doi", "antimicrobial_compound",
+         "farm_type",
+          
+         "sampling_end_date", "mean")
+
+
+data2 <- filter(data1, !is.na(data1$sampling_end_date))
+ 
+
+
+data3 <-aggregate(mean~doi+farm_type+sampling_end_date, data2, mean)
+
+
+#changing percentage resistance into numeric class and rounding off  
+data3$mean <- as.numeric(as.character(data3$mean))
+
+data3$mean <- round(data3$mean, digits = 0)
+
+data3<- data3[which(data3$mean>= 1),]
+
+
+
+
+##Organic farm plot
+
+organic.data<- data3 %>%
+  filter(farm_type == "Organic")
+   
+        
+##Organic box plot
+
+organic.p1<-ggboxplot(organic.data, "sampling_end_date", "mean", fill = "farm_type",
+        xlab = "Year", ylab = "Percent resistance", 
+           palette = c("#00AFBB")) +
+  geom_boxplot(fill = "#00AFBB") +
+  geom_jitter(alpha =0.4
+  ) +
+  rotate_x_text(60)+
+  font("xlab", size = 17)+
+ font("ylab", size = 17)+
+ font("xy.text", size = 17)+
+  font("legend.title",size = 17)+
+  font("legend.text", size = 17)
+
+
+organic.plot <-ggpar(organic.p1, legend.title = "Farm type",ylim = c(0, 100))
+
+
+p1 <- organic.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
+##Conventional farm plot
+
+conv.data<- data3 %>%
+  filter(farm_type == "Conventional")
+
+
+##Conventional box plot
+
+conv.p1<-ggboxplot(conv.data, "sampling_end_date", "mean", fill = "farm_type",
+                      xlab = "Year", ylab = "Percent resistance", 
+                      palette = c("#FC4E07")) +
+  geom_boxplot(fill = "#FC4E07") +
+ geom_jitter(alpha =0.4) +
+  rotate_x_text(60)+
+  font("xlab", size = 17)+
+ font("ylab", size = 17)+
+ font("xy.text", size = 17)+
+  font("legend.title",size = 17)+
+  font("legend.text", size = 17)
+
+
+conv.plot <-ggpar(conv.p1, legend.title = "Farm type",ylim = c(0, 100))
+
+p2 <- conv.plot + geom_smooth(formula = y ~ x, method = "lm",color= "blue", aes(group=1))
+
+
+main_data <- read_csv("mean.data.csv")
+
+#changing percentage resistance into numeric class and rounding off  
+main_data$percent_resistant <- as.numeric(as.character
+                                          (main_data$percent_resistant))
+
+main_data$percent_resistant <- round(main_data$percent_resistant, digits = 0)
+
+
+data2 <- main_data %>%
+  group_by(host) %>%
+  select("doi",
+         "farm_type",
+        "host",
+        "percent_resistant")
+         
+         
+
+
+
+
+
+data3 <-aggregate(percent_resistant~doi+farm_type+host, data2, mean)
+
+
+
+#changing percentage resistance into numeric class and rounding off  
+data3$percent_resistant <- as.numeric(as.character
+                                      (data3$percent_resistant))
+
+data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
+
+data3<- data3[which(data3$percent_resistant>= 1),]
+
+#subseting organic farm data
+Organic.data <- data3 %>%
+  filter(farm_type == "Organic")
+
+
+
+
+
+
+org.plot<-ggplot(Organic.data, aes(x = host, y = percent_resistant, fill = host))+ 
+  geom_boxplot(
+    width = .15, 
+    outlier.shape = NA
+  ) +
+ 
+  scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  coord_cartesian(xlim = c(1.2, NA), clip = "off")
+
+org.plot<- org.plot+
+  theme_pubr(
+  base_size = 17,
+  base_family = "",
+  border = FALSE,
+  margin = TRUE,
+  legend = c("top"),
+  x.text.angle = 0
+)
+
+org.plot<- org.plot+labs(x = "Host", fill = "Host")
+org.plot<- org.plot+scale_color_discrete(name = "Host")
+##Changing x axis label order
+org.plot <- org.plot + scale_x_discrete(name ="Host", 
+                     limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
+
+org.1 <-org.plot+labs(x = "Host", y = "Percent resistance", 
+                     title = "Organic farms")+
+  theme(legend.position = "none")
+              
+org.1 <-ggpar(org.1,ylim = c(0, 100))
+
+##Conventional plots
+
+#subseting conventionalfarm data
+
+conv.data <- data3 %>%
+  filter(farm_type == "Conventional")
+
+
+
+conv.plot<-ggplot(conv.data, aes(x = host, y = percent_resistant, fill = host))+
+  
+  geom_boxplot(
+    width = .15, 
+    outlier.shape = NA, 
+  ) +
+   scale_fill_manual(values = wes_palette( "Darjeeling1", n=5))+
+  coord_cartesian(xlim = c(1.2, NA), clip = "off")
+
+conv.plot<- conv.plot+
+  theme_pubr(
+  base_size = 17,
+  base_family = "",
+  border = FALSE,
+  margin = TRUE,
+  legend = c("top"),
+  x.text.angle = 0
+)
+
+conv.plot<- conv.plot+labs(x = "Host", fill = "Host")
+##Changing x axis label order
+conv.plot <- conv.plot + scale_x_discrete(name ="Host", 
+                                        limits=c("Cattle","Chicken","Pigs", "Turkey", "Environment"))
+
+
+
+conv.1<- conv.plot+labs(x = "Host", y = "Percent resistance",
+                        title = "Conventional farms")+
+  theme(legend.position = "none")
+
+conv.1 <-ggpar(conv.1,ylim = c(0, 100))
+
+##Merge pathogen plots
+
+host.plot <- (p1 |p2)/
+  (org.1 |conv.1)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "keep")&
+  theme(plot.tag = element_text(),
+        legend.position = "top")& 
+  theme(plot.tag = element_text(size = 17))
+
+host.plot
+
+```
+
+
+### Resistance of foodborne pathogens across different regions 
+
+
+```{r continents,echo=FALSE, fig.height=15, fig.width=20, message=FALSE}
+#Load data
+main_data <- read_csv("conv.csv")
+
+
+
+data1 <- main_data%>%
+  mutate(
+    continent =
+      ifelse(continent == "Oceania", 
+             "New Zealand", continent
+      )
+  )
+
+
+
+
+
+data1 <- main_data %>%
+  group_by(country) %>%
+  select("continent",
+         "doi",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+         "no_isolates_resistant",
+         "no_isolates_susceptible",
+         "no_isolates_intermidiate",
+         "no_isolates" )
+
+#changing percentage resistance into numeric class and rounding off  
+data1$percent_resistant <- as.numeric(as.character
+                                          (data1$percent_resistant))
+
+data1$percent_resistant <- round(data1$percent_resistant, digits = 0)
+
+data2 <- data1 %>%
+  select("doi",
+    "continent",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+    "no_isolates_resistant",
+    "no_isolates_susceptible",
+    "no_isolates_intermidiate",
+         "no_isolates" )
+
+
+
+data3 <- data2 %>%select("continent",
+                        "doi",
+                         "farm_type",
+                        "host",
+                         "antimicrobial_compound",
+                        "pathogen",
+                         "percent_resistant", "no_isolates")%>%
+filter(pathogen != "Arcanobacterium pyogenes", pathogen != "Corynebacterium bovis",
+           pathogen != "Environmental streptococci")
+ 
+
+#changing percentage resistance into numeric class and rounding off  
+data3$percent_resistant <- as.numeric(as.character
+                                      (data3$percent_resistant))
+
+data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
+#####################################################################################
+
+ecoli<- subset(data3, pathogen == "E.coli")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoEcoli <- mapply(new.function1, ecoli$percent_resistant, ecoli$no_isolates)
+ResIsoEcoli <- round(ResIsoEcoli, digits = 0)
+AMR.tmp.ecoli <- cbind(ecoli, ResIsoEcoli)
+
+#determine total NIsolates
+EcoliNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                             antimicrobial_compound + pathogen + percent_resistant+
+                             ResIsoEcoli, data = AMR.tmp.ecoli, FUN = sum)
+
+
+EcoliNIsolates$no_isolates <- sapply(EcoliNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+ecolires <- aggregate(ResIsoEcoli ~ antimicrobial_compound  + farm_type+
+                       continent, 
+                     data = AMR.tmp.ecoli, FUN = sum)
+ecoliAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                       continent, 
+                     data = AMR.tmp.ecoli, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+EcoliMean <- round((ecolires$ResIsoEcoli /ecoliAll$no_isolates)*100, digits = 0)
+EcoliMeanDF <- as.data.frame(cbind(ecolires$antimicrobial_compound,
+                                  ecolires$farm_type, ecolires$continent,
+                                  EcoliMean, ecoliAll$no_isolates))
+colnames(EcoliMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                           "Mean","no_isolates")
+EcoliMeanDF$Mean <- as.numeric(as.character(EcoliMeanDF$Mean))
+EcoliMeanDF$no_isolates <- as.numeric(as.character(EcoliMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+EcoliMeanDF = EcoliMeanDF[which(EcoliMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIecoli<- as.data.frame(t(mapply(CI.function, EcoliMeanDF$Mean/100, EcoliMeanDF$no_isolates)))
+EcoliMeanDF <-cbind(EcoliMeanDF, round(CIecoli*100, digits = 0))
+colnames(EcoliMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                         "Mean","no_isolates","CILow","CIHigh")
+EcoliMeanDF$CILow[EcoliMeanDF$CILow < 0] = 0
+EcoliMeanDF$CIHigh[EcoliMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+EcoliMeanDF <- EcoliMeanDF%>%
+  filter(Mean>1)
+
+
+
+
+  
+##Ecoli bars  
+
+##Europe
+europe.ecoli <- EcoliMeanDF %>%
+  filter(continent == "Europe")
+
+europe.ecoli$antimicrobial_compound <- factor(europe.ecoli$antimicrobial_compound, 
+                                              levels=c('AMC', 'AMK','AMP', 'APR', 'AZI', 'CAZI',
+                                                       'CEF', 'CFP', 'CIP', 'COX', 'CST', 'CTX', 
+                                                       'ENR', 'GEN','IMP', 'KAN', 'MZL', 'NAL', 
+                                                       'NEO', 'PIP',
+                                                       'STR', 'TGC', 'TZP', 
+                                                       'FOS', 'CEC',
+                                                      'CFZ', 'CHL', 'CXM', 'DOX', 'FOX', 'NIT',
+                                                     'SPT', 'SMZ',
+                                                       'TET', 'TMP', 'TMP-SMZ'
+                                                       ))
+
+europe.ecoli.plot <- ggbarplot(europe.ecoli, "antimicrobial_compound", "Mean", 
+                               fill = "farm_type", position = position_dodge(0.7),
+                               subtitle = "Europe, E.coli n = 9,007",
+                               xlab = FALSE, ylab = FALSE,
+                               legend.title = "Farm type",
+                                font.subtitle = c(19))+
+  annotate('rect', xmin=0, xmax=23.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+ font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+europe.ecoli.plot <- ggpar(europe.ecoli.plot, ylim = c(0, 100))
+
+
+
+#Asia 
+asia.ecoli <- EcoliMeanDF %>%
+  filter(continent == "Asia")
+
+##Ordering bar graphs in descending order
+
+asia.ecoli$antimicrobial_compound <- factor(asia.ecoli$antimicrobial_compound, 
+                                              levels=c('AMC', 'CST', 'GEN', 'KAN', 'NEO',
+                                                       'DOX', 'TMP-SMZ'))
+
+asia.ecoli.plot <- ggbarplot(asia.ecoli, "antimicrobial_compound", "Mean", 
+                             fill = "farm_type", position = position_dodge(0.7),
+                             subtitle = "Asia, E.coli n= 215",
+                             xlab = FALSE, ylab = FALSE,
+                             legend.title = "Farm type",
+                             font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=5.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+asia.ecoli.plot <- ggpar(asia.ecoli.plot, ylim = c(0, 100))
+
+
+
+##North America
+
+N.A.ecoli <- EcoliMeanDF %>%
+  filter(continent == "North America")
+
+N.A.ecoli$antimicrobial_compound <- factor(N.A.ecoli$antimicrobial_compound, 
+                                            levels=c('AMC', 'AMP', 'CEF', 'ERY', 'GEN',
+                                                     'KAN', 'NAL', 'NEO', 'STR', 'TYL',
+                                                     'CHL', 'CTET', 'PEN', 'SMZ', 'SPT',
+                                           'TET'))
+
+N.A.ecoli.plot <- ggbarplot(N.A.ecoli, "antimicrobial_compound", "Mean", 
+                            fill = "farm_type", position = position_dodge(0.7),
+                            subtitle = "North America, E.coli n= 23,845",
+                            xlab = FALSE, ylab = FALSE,
+                            legend.title = "Farm type",
+                             font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=10.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.ecoli.plot <- ggpar(N.A.ecoli.plot, ylim = c(0, 100))
+
+
+#Oceania
+
+oceania.ecoli <- EcoliMeanDF %>%
+  filter(continent == "Oceania")
+
+
+oceania.ecoli$antimicrobial_compound <- factor(oceania.ecoli$antimicrobial_compound, 
+                                           levels=c('AMP', 'CPDX', 'MER', 'STR',
+                                                    'NEO', 'CHL', 'FOX', 'TET', 
+                                                    'TMP-SMZ'))
+
+oceania.ecoli.plot <- ggbarplot(oceania.ecoli, "antimicrobial_compound", "Mean", 
+                                fill = "farm_type", position = position_dodge(0.7),
+                                subtitle = "Oceania, E.coli n = 2,379",
+                                xlab = FALSE, ylab = FALSE,
+                                legend.title = "Farm type", 
+                               font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=5.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+oceania.ecoli.plot <- ggpar(oceania.ecoli.plot, ylim = c(0, 100))
+
+#South america
+
+S.A.ecoli <- EcoliMeanDF %>%
+  filter(continent == "South America")
+
+S.A.ecoli$antimicrobial_compound <- factor(S.A.ecoli$antimicrobial_compound, 
+                                               levels=c('AMC', 'AMP', 'CAZI', 'CIP',
+                                                        'CTX', 'ENR', 'GEN', 'NAL', 
+                                                        'NOR', 'CFZ', 'CHL', 'FOX',
+                                                        'NIT', 'TET', 'TMP-SMZ'))
+
+S.A.ecoli.plot <- ggbarplot(S.A.ecoli, "antimicrobial_compound", "Mean", 
+                            fill = "farm_type", position = position_dodge(0.7),
+                            subtitle = "South America, E.coli n = 312",
+                            xlab = FALSE, ylab = FALSE,
+                            legend.title = "Farm type", 
+                             font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=9.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+S.A.ecoli.plot <- ggpar(S.A.ecoli.plot, ylim = c(0, 100))
+
+
+
+
+##Enterococcus data
+
+entero<- subset(data3, pathogen == "Enterococcus")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoEntero <- mapply(new.function1, entero$percent_resistant, entero$no_isolates)
+ResIsoEntero <- round(ResIsoEntero, digits = 0)
+AMR.tmp.entero <- cbind(entero, ResIsoEntero)
+
+#determine total NIsolates
+EnteroNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                              antimicrobial_compound + pathogen + percent_resistant+
+                              ResIsoEntero, data = AMR.tmp.entero, FUN = sum)
+
+
+EnteroNIsolates$no_isolates <- sapply(EnteroNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+enterores <- aggregate(ResIsoEntero ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.entero, FUN = sum)
+enteroAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.entero, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+EnteroMean <- round((enterores$ResIsoEntero /enteroAll$no_isolates)*100, digits = 0)
+EnteroMeanDF <- as.data.frame(cbind(enterores$antimicrobial_compound,
+                                   enterores$farm_type, enterores$continent,
+                                   EnteroMean, enteroAll$no_isolates))
+colnames(EnteroMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                           "Mean","no_isolates")
+EnteroMeanDF$Mean <- as.numeric(as.character(EnteroMeanDF$Mean))
+EnteroMeanDF$no_isolates <- as.numeric(as.character(EnteroMeanDF$no_isolates))
+
+#restrict display drug pairings where NIsolates > 10
+EnteroMeanDF = EnteroMeanDF[which(EnteroMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIentero<- as.data.frame(t(mapply(CI.function, EnteroMeanDF$Mean/100,
+                                  EnteroMeanDF$no_isolates)))
+EnteroMeanDF <-cbind(EnteroMeanDF, round(CIentero*100, digits = 0))
+
+colnames(EnteroMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                           "Mean","no_isolates","CILow","CIHigh")
+
+EnteroMeanDF$CILow[EnteroMeanDF$CILow < 0] = 0
+EnteroMeanDF$CIHigh[EnteroMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+EnteroMeanDF <- EnteroMeanDF%>%
+  filter(Mean>1)
+
+###Bar plots
+
+##Asia enterococcus bar plot
+
+asia.entero <- EnteroMeanDF %>%
+  filter(continent == "Asia")
+
+asia.entero$antimicrobial_compound <- factor(asia.entero$antimicrobial_compound, 
+                                           levels=c('CIP', 'ERY', 'GEN', 'LZD',
+                                                    'RMP', 'NIT', 'Q-D', 'TET'))
+
+asia.entero.plot <- ggbarplot(asia.entero, "antimicrobial_compound", "Mean", 
+                              fill = "farm_type", 
+                              position = position_dodge(0.7),
+                              subtitle = "Asia, Enterococcus n= 104",
+                              xlab = FALSE, ylab = FALSE,
+                              legend.title = "Farm type",
+                             font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=5.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+asia.entero.plot <- ggpar(asia.entero.plot, ylim = c(0, 100))
+
+
+
+##Europe Enterococcus bar plot
+
+europe.entero <- EnteroMeanDF %>%
+  filter(continent == "Europe")
+
+europe.entero$antimicrobial_compound <- factor(europe.entero$antimicrobial_compound, 
+                                             levels=c('AMP', 'CIP', 'ERY', 'FOS',
+                                                      'GEN', 'IMP', 'RMP', 'STR',
+                                                      'TYL', 'VAN', 'CHL', 'DOX',
+                                                      'NIT'))
+
+
+europe.enterococcus.plot <- ggbarplot(europe.entero, "antimicrobial_compound",
+                                      "Mean", 
+                                      fill = "farm_type", position = position_dodge(0.7),
+                                      subtitle = "Europe, Enterococcus n = 568",
+                                      xlab = FALSE, ylab = FALSE,
+                                      legend.title = "Farm type",
+                                       font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=10.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+
+europe.enterococcus.plot <- ggpar(europe.enterococcus.plot, ylim = c(0, 100))
+
+
+
+
+##North America, Enterococcus bar plot
+
+N.A.entero <- EnteroMeanDF %>%
+  filter(continent == "North America")
+
+N.A.entero$antimicrobial_compound <- factor(N.A.entero$antimicrobial_compound, 
+                                               levels=c('AMC', 'AMK', 'AMP', 'AZI',
+                                                        'CIP', 'ERY', 'GEN', 'KAN',
+                                                        'LZD', 'STR', 'TGC', 'TYL',
+                                                        'CEC', 'CHL', 'FLY', 'FOX',
+                                                        'LCM', 'NIT', 'PEN', 'Q-D',
+                                                        'TET'))
+
+
+N.A.entero.plot <- ggbarplot(N.A.entero, "antimicrobial_compound", "Mean", 
+                             fill = "farm_type", position = position_dodge(0.7),
+                             subtitle = "North America, Enterococcus n = 811",
+                             xlab = FALSE, ylab = FALSE,
+                             legend.title = "Farm type", 
+                            font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=12.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.entero.plot <- ggpar(N.A.entero.plot, ylim = c(0, 100))
+
+
+
+##Oceania, Enterococcus bar plot
+
+oceania.entero <- EnteroMeanDF %>%
+  filter(continent == "Oceania",)
+
+
+
+oceania.enterococcus.plot <- ggbarplot(oceania.entero, "antimicrobial_compound",
+                                       "Mean", 
+                                       fill = "farm_type", position = position_dodge(0.7),
+                                       subtitle = "Oceania, Enterococcus n = 706",
+                                       xlab = FALSE, ylab = FALSE,
+                                       legend.title = "Farm type",
+                                       font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=3.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+oceania.enterococcus.plot <- ggpar(oceania.enterococcus.plot, ylim = c(0, 100))
+
+
+
+##Salmonella
+
+
+sal<- subset(data3, pathogen == "Salmonella")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoSal <- mapply(new.function1, sal$percent_resistant, sal$no_isolates)
+ResIsoSal  <- round(ResIsoSal , digits = 0)
+AMR.tmp.sal <- cbind(sal, ResIsoSal)
+
+#determine total NIsolates
+SalNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                              antimicrobial_compound + pathogen + percent_resistant+
+                            ResIsoSal, data = AMR.tmp.sal, FUN = sum)
+
+
+SalNIsolates$no_isolates <- sapply(SalNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+salres <- aggregate(ResIsoSal ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.sal, FUN = sum)
+salAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.sal, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+SalMean <- round((salres$ResIsoSal /salAll$no_isolates)*100, digits = 0)
+
+SalMeanDF <- as.data.frame(cbind(salres$antimicrobial_compound,
+                                   salres$farm_type, salres$continent,
+                                   SalMean, salAll$no_isolates))
+colnames(SalMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                           "Mean","no_isolates")
+
+
+SalMeanDF$Mean <- as.numeric(as.character(SalMeanDF$Mean))
+SalMeanDF$no_isolates <- as.numeric(as.character(SalMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+SalMeanDF = SalMeanDF[which(SalMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIsal<- as.data.frame(t(mapply(CI.function, SalMeanDF$Mean/100, 
+                               SalMeanDF$no_isolates)))
+SalMeanDF <-cbind(SalMeanDF, round(CIsal*100, digits = 0))
+
+colnames(SalMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                           "Mean","no_isolates","CILow","CIHigh")
+
+SalMeanDF$CILow[SalMeanDF$CILow < 0] = 0
+SalMeanDF$CIHigh[SalMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+SalMeanDF <- SalMeanDF%>%
+  filter(Mean>1)
+
+
+
+##Asia Salmonella bar plot
+
+asia.sal <- SalMeanDF %>%
+  filter(continent == "Asia")
+
+
+asia.sal$antimicrobial_compound <- factor(asia.sal$antimicrobial_compound, 
+                                            levels=c('AMC', 'AMP', 'CAZI', 'CIP',
+                                                     'CTX', 'ERY', 'GEN', 'GFX',
+                                                     'NAL', 'NEO', 'STR', 'CEP',
+                                                     'CTF', 'MER', 'CHL', 'DOX',
+                                                     'FLO', 'NIT', 'OFX', 'SMZ',
+                                                     'SPT', 'TET', 'TMP', 'TMP-SMZ',
+                                                     'CEF', 'FOX'))
+
+
+asia.salmonella.plot <- ggbarplot(asia.sal, "antimicrobial_compound",
+                                  "Mean", 
+                                  fill = "farm_type", position = position_dodge(0.7),
+                                  subtitle = "Asia, Salmonella n = 845",
+                                  xlab = FALSE, ylab = FALSE,
+                                  legend.title = "Farm type",
+                                 font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=14.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+
+asia.salmonella.plot <- ggpar(asia.salmonella.plot, ylim = c(0, 100))
+
+
+
+##North America, Salmonella bar plot
+
+N.A.sal <- SalMeanDF %>%
+  filter(continent == "North America")
+
+N.A.sal$antimicrobial_compound <- factor(N.A.sal$antimicrobial_compound, 
+                                          levels=c('AMC', 'AMP', 'AZI', 'CEF',
+                                                   'CRO', 'CTF', 'CTX', 'GEN', 'KAN',
+                                                   'STR', 'CHL', 'FOX', 'SMZ',
+                                                   'TET', 'TMP-SMZ'))
+
+
+N.A.salmonella.plot <- ggbarplot(N.A.sal, "antimicrobial_compound", 
+                                 "Mean", 
+                                 fill = "farm_type", position = position_dodge(0.7),
+                                 subtitle = "North America, Salmonella n = 5,230",
+                                 xlab = FALSE, ylab = FALSE,
+                                 legend.title = "Farm type", 
+                                 font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=9.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.salmonella.plot <- ggpar(N.A.salmonella.plot, ylim = c(0, 100))
+
+
+
+
+##Staphylocccus data
+
+
+staph<- subset(data3, pathogen == "Staphylococcus")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoStaphi <- mapply(new.function1, staph$percent_resistant, staph$no_isolates)
+ResIsoStaphi <- round(ResIsoStaphi, digits = 0)
+AMR.tmp.staph <- cbind(staph, ResIsoStaphi)
+
+#determine total NIsolates
+StaphNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                              antimicrobial_compound + pathogen + percent_resistant+
+                              ResIsoStaphi, data = AMR.tmp.staph, FUN = unique)
+
+
+StaphNIsolates$no_isolates <- sapply(StaphNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by host compound and region
+staphres <- aggregate(ResIsoStaphi ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.staph, FUN = sum)
+staphAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.staph, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+StaphMean <- round((staphres$ResIsoStaphi /staphAll$no_isolates)*100, digits = 0)
+
+StaphMeanDF <- as.data.frame(cbind(staphres$antimicrobial_compound,
+                                  staphres$farm_type, staphres$continent,
+                                   StaphMean, staphAll$no_isolates))
+
+colnames(StaphMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                           "Mean","no_isolates")
+StaphMeanDF$Mean <- as.numeric(as.character(StaphMeanDF$Mean))
+StaphMeanDF$no_isolates <- as.numeric(as.character(StaphMeanDF$no_isolates))
+
+
+#restrict display drug pairings where NIsolates > 10
+StaphMeanDF <- StaphMeanDF[which(StaphMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIstaph<- as.data.frame(t(mapply(CI.function, StaphMeanDF$Mean/100, StaphMeanDF$no_isolates)))
+StaphMeanDF <-cbind(StaphMeanDF, round(CIstaph*100, digits = 0))
+colnames(StaphMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                           "Mean","no_isolates","CILow","CIHigh")
+StaphMeanDF$CILow[StaphMeanDF$CILow < 0] = 0
+StaphMeanDF$CIHigh[StaphMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+StaphMeanDF <- StaphMeanDF%>%
+  filter(Mean>1)
+
+
+##Bar plots
+
+##Asia Staphylococcus bar plot
+
+asia.staph <- StaphMeanDF %>%
+  filter(continent == "Asia")
+
+
+
+
+asia.Staphylococcus.plot <- ggbarplot(asia.staph, "antimicrobial_compound", "Mean", 
+                                      fill = "farm_type", position = position_dodge(0.7),
+                                      subtitle = "Asia, Staphylococcus n = 972",
+                                      xlab = FALSE, ylab = FALSE,
+                                      legend.title = "Farm type",
+                                     font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=5.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+
+asia.Staphylococcus.plot <- ggpar(asia.Staphylococcus.plot, ylim = c(0, 100))
+
+
+
+
+##North America, Staphylococcus bar plot
+
+N.A.staphy <- StaphMeanDF %>%
+  filter(continent == "North America")
+
+
+
+N.A.Staphylococcus.plot <- ggbarplot(N.A.staphy, "antimicrobial_compound", "Mean", 
+                                     fill = "farm_type", position = position_dodge(0.7),
+                                     subtitle = "North America, Staphylococcus n = 405",
+                                     xlab = FALSE, ylab = FALSE,
+                                     legend.title = "Farm type", 
+                                    font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=1.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.Staphylococcus.plot <- ggpar(N.A.Staphylococcus.plot, ylim = c(0, 100))
+
+
+##Campylobacter
+
+
+campy<- subset(data3, pathogen == "Campylobacter")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoCampy <- mapply(new.function1, campy$percent_resistant, campy$no_isolates)
+ResIsoCampy  <- round(ResIsoCampy , digits = 0)
+AMR.tmp.campy <- cbind(campy, ResIsoCampy)
+
+#determine total NIsolates
+CampyNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                            antimicrobial_compound + pathogen + percent_resistant+
+                            ResIsoCampy, data = AMR.tmp.campy, FUN = sum)
+
+
+CampyNIsolates$no_isolates <- sapply(CampyNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+campyres <- aggregate(ResIsoCampy ~ antimicrobial_compound  + farm_type+
+                      continent, 
+                    data = AMR.tmp.campy, FUN = sum)
+campyAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                      continent, 
+                    data = AMR.tmp.campy, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+CampyMean <- round((campyres$ResIsoCampy /campyAll$no_isolates)*100, digits = 0)
+
+CampyMeanDF <- as.data.frame(cbind(campyres$antimicrobial_compound,
+                                campyres$farm_type, campyres$continent,
+                                 CampyMean, campyAll$no_isolates))
+colnames(CampyMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                         "Mean","no_isolates")
+
+
+CampyMeanDF$Mean <- as.numeric(as.character(CampyMeanDF$Mean))
+CampyMeanDF$no_isolates <- as.numeric(as.character(CampyMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+CampyMeanDF = CampyMeanDF[which(CampyMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIcampy<- as.data.frame(t(mapply(CI.function, CampyMeanDF$Mean/100, 
+                               CampyMeanDF$no_isolates)))
+CampyMeanDF <-cbind(CampyMeanDF, round(CIcampy*100, digits = 0))
+
+colnames(CampyMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                         "Mean","no_isolates","CILow","CIHigh")
+
+CampyMeanDF$CILow[CampyMeanDF$CILow < 0] = 0
+CampyMeanDF$CIHigh[CampyMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+CampyMeanDF <- CampyMeanDF%>%
+  filter(Mean>1)
+
+
+
+##Europe Campylobacter bar plot
+
+europe.campy <- CampyMeanDF %>%
+  filter(continent == "Europe")
+
+europe.campy$antimicrobial_compound <- factor(europe.campy$antimicrobial_compound, 
+                                         levels=c('AMC', 'AMK', 'AMP', 'CIP',
+                                                  'CTX', 'ERY', 'NAL', 'STR',
+                                                  'NOR', 'OFX', 'CFM', 'FOX',
+                                                  'TET', 'CHL', 'TMP-SMZ'))
+
+
+europe.Campylobacter.plot <- ggbarplot(europe.campy, "antimicrobial_compound", "Mean", 
+                                       fill = "farm_type", position = position_dodge(0.7),
+                                       subtitle = "Europe, Campylobacter n = 1,214",
+                                       xlab = FALSE, ylab = FALSE,
+                                       legend.title = "Farm type",
+                                      font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=10.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+
+europe.Campylobacter.plot <- ggpar(europe.Campylobacter.plot, ylim = c(0, 100))
+
+
+
+##North America, campylobacter bar plot
+
+N.A.campylobacter <- CampyMeanDF %>%
+  filter(continent == "North America")
+
+
+N.A.campylobacter $antimicrobial_compound <- factor(N.A.campylobacter$antimicrobial_compound, 
+                                              levels=c('AMP', 'AZI', 'CIP', 'CLIN', 'CTX',
+                                                       'ERY', 'KAN', 'NAL', 'NOR',
+                                                       'STR', 'TEL', 'TYL', 'CRO',
+                                                       'SMZ', 'SPT', 'TET'))
+
+
+
+N.A.campylobacter.plot <- ggbarplot(N.A.campylobacter, "antimicrobial_compound", "Mean", 
+                                    fill = "farm_type", position = position_dodge(0.7),
+                                    subtitle = "North America, Campylobacter n = 14,607",
+                                    xlab = FALSE, ylab = FALSE,
+                                    legend.title = "Farm type", 
+                                    font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=12.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.campylobacter.plot <- ggpar(N.A.campylobacter.plot, ylim = c(0, 100))
+
+
+
+##Methicillin-resistant staphylococcus aureus - MRSA
+
+mrsa<- subset(data3, pathogen == "MRSA")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoMrsa <- mapply(new.function1, mrsa$percent_resistant, mrsa$no_isolates)
+ResIsoMrsa <- round(ResIsoMrsa, digits = 0)
+AMR.tmp.mrsa <- cbind(mrsa, ResIsoMrsa)
+
+#determine total NIsolates
+MrsaNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                              antimicrobial_compound + pathogen + percent_resistant+
+                              ResIsoMrsa, data = AMR.tmp.mrsa, FUN = sum)
+
+
+MrsaNIsolates$no_isolates <- sapply(MrsaNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+mrsares <- aggregate(ResIsoMrsa ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.mrsa, FUN = sum)
+mrsaAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                        continent, 
+                      data = AMR.tmp.mrsa, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+MrsaMean <- round((mrsares$ResIsoMrsa /mrsaAll$no_isolates)*100, digits = 0)
+
+MrsaMeanDF <- as.data.frame(cbind(mrsares$antimicrobial_compound,
+                                   mrsares$farm_type,mrsares$continent,
+                                   MrsaMean, mrsaAll$no_isolates))
+
+colnames(MrsaMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                           "Mean","no_isolates")
+
+
+MrsaMeanDF$Mean <- as.numeric(as.character(MrsaMeanDF$Mean))
+
+MrsaMeanDF$no_isolates <- as.numeric(as.character(MrsaMeanDF$no_isolates))
+
+#restrict display drug pairings where NIsolates > 10
+MrsaMeanDF = MrsaMeanDF[which(MrsaMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+
+CImrsa<- as.data.frame(t(mapply(CI.function, MrsaMeanDF$Mean/100,
+                                    MrsaMeanDF$no_isolates)))
+
+MrsaMeanDF <-cbind(MrsaMeanDF, round(CImrsa*100, digits = 0))
+colnames(MrsaMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                           "Mean","no_isolates","CILow","CIHigh")
+
+MrsaMeanDF$CILow[MrsaMeanDF$CILow < 0] = 0
+MrsaMeanDF$CIHigh[MrsaMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+MrsaMeanDF <- MrsaMeanDF%>%
+  filter(Mean>1)
+
+
+
+##Europe MRSA bar plot
+
+europe.MRSA <- MrsaMeanDF %>%
+  filter(continent == "Europe")
+
+europe.MRSA $antimicrobial_compound <- factor(europe.MRSA$antimicrobial_compound, 
+                                                    levels=c('AMC', 'AMP', 'APR', 'CEF',
+                                                             'CEQ', 'CLIN', 'CTF', 'ENR',
+                                                             'ERY', 'GEN', 'NEO', 'TIL',
+                                                             'FLO', 'PEN', 'SPT', 'TET',
+                                                             'TIA', 'TMP-SMZ'))
+
+
+europe.MRSA.plot <- ggbarplot(europe.MRSA, "antimicrobial_compound", 
+                              "Mean", 
+                              fill = "farm_type", position = position_dodge(0.7),
+                              subtitle = "Europe, MRSA n = 2,933",
+                              xlab = FALSE, ylab = FALSE,
+                              legend.title = "Farm type", 
+                              font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=12.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+
+europe.MRSA.plot <- ggpar(europe.MRSA.plot, ylim = c(0, 100))
+
+
+
+##S.aureus
+saureus<- subset(data3, pathogen == "S.aureus")
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsoSaureus <- mapply(new.function1, saureus$percent_resistant, saureus$no_isolates)
+ResIsoSaureus  <- round(ResIsoSaureus , digits = 0)
+AMR.tmp.saureus <- cbind(saureus, ResIsoSaureus)
+
+#determine total NIsolates
+SaureusNIsolates <- aggregate(no_isolates ~ doi + continent + farm_type + 
+                            antimicrobial_compound + pathogen + percent_resistant+
+                            ResIsoSaureus, data = AMR.tmp.saureus, FUN = sum)
+
+
+SaureusNIsolates$no_isolates <- sapply(SaureusNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+saureusres <- aggregate(ResIsoSaureus ~ antimicrobial_compound  + farm_type+
+                      continent, 
+                    data = AMR.tmp.saureus, FUN = sum)
+saureusAll <- aggregate(no_isolates ~ antimicrobial_compound  + farm_type+
+                      continent, 
+                    data = AMR.tmp.saureus, FUN = sum)
+
+#and divide ResIso/NIsolates to return true mean
+SaureusMean <- round((saureusres$ResIsoSaureus /saureusAll$no_isolates)*100, 
+                     digits = 0)
+
+SaureusMeanDF <- as.data.frame(cbind(saureusres$antimicrobial_compound,
+                                 saureusres$farm_type, saureusres$continent,
+                                 SaureusMean, saureusAll$no_isolates))
+
+colnames(SaureusMeanDF) <- c("antimicrobial_compound","farm_type","continent",
+                         "Mean","no_isolates")
+
+
+SaureusMeanDF$Mean <- as.numeric(as.character(SaureusMeanDF$Mean))
+SaureusMeanDF$no_isolates <- as.numeric(as.character(SaureusMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+SaureusMeanDF <- SaureusMeanDF[which(SaureusMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIsaureus<- as.data.frame(t(mapply(CI.function, SaureusMeanDF$Mean/100, 
+                               SaureusMeanDF$no_isolates)))
+SaureusMeanDF <-cbind(SaureusMeanDF, round(CIsaureus*100, digits = 0))
+
+colnames(SaureusMeanDF) <- c("antimicrobial_compound", "farm_type","continent",
+                         "Mean","no_isolates","CILow","CIHigh")
+
+SaureusMeanDF$CILow[SaureusMeanDF$CILow < 0] = 0
+SaureusMeanDF$CIHigh[SaureusMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+SaureusMeanDF <- SaureusMeanDF%>%
+  filter(Mean>1)
+
+
+
+##Europe S.aureus bar plot
+
+europe.saureus <- SaureusMeanDF %>%
+  filter(continent == "Europe")
+
+europe.saureus $antimicrobial_compound <- factor(europe.saureus$antimicrobial_compound, 
+                                              levels=c('AMC', 'AMP', 'CIP', 'CLI', 'CLIN',
+                                                       'CLOXA', 'ENR', 'ERY', 'GEN',
+                                                       'KAN', 'LZD', 'RMP', 'STR',
+                                                       'TYC', 'CHL', 'DOX', 'FOX',
+                                                       'FUS', 'LCM', 'NB', 'NIT',
+                                              'OXA', 'PEN', 'Q-D', 'SMZ', 'SPM',
+                                              'TET', 'TIA', 'TMP', 'TYL'))
+                                              
+
+
+europe.s.aureus.plot <- ggbarplot(europe.saureus, "antimicrobial_compound", 
+                                  "Mean", 
+                                  fill = "farm_type", position = position_dodge(0.7),
+                                  subtitle = "Europe, S.aureus n = 970",
+                                  xlab = FALSE, ylab = FALSE,
+                                  legend.title = "Farm type",
+                                 font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=12.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+europe.s.aureus.plot <- ggpar(europe.s.aureus.plot, ylim = c(0, 100))
+
+
+
+##North America, S.aureus bar plot
+
+N.A.saureus <- SaureusMeanDF %>%
+  filter(continent == "North America")
+
+
+N.A.saureus$antimicrobial_compound <- factor(N.A.saureus$antimicrobial_compound, 
+                                                 levels=c('AMC', 'AMP', 'CIP', 'CLIN',
+                                                          'ERY', 'LVX', 'LCM', 'NB',
+                                                          'PEN', 'SPT', 'TET'))
+
+
+
+
+N.A.saureus.plot <- ggbarplot(N.A.saureus, "antimicrobial_compound",
+                              "Mean", 
+                             fill = "farm_type", position = position_dodge(0.7),
+                             subtitle = "North America, S.aureus n = 486",
+                             xlab = FALSE, ylab = FALSE,
+                             legend.title = "Farm type", 
+                             font.subtitle = c(19))+
+   annotate('rect', xmin=0, xmax=6.5, ymin=0, ymax=100, alpha=.5, fill='gray')+
+  rotate_x_text(90)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+N.A.saureus.plot <- ggpar(N.A.saureus.plot, ylim = c(0, 100))
+
+
+
+##Putting all plots together using patchwork
+
+
+yleft <- textGrob("Percentage resistance", rot = 90, gp = gpar(fontsize = 20))
+ bottom <- textGrob("Antimicrobial", gp = gpar(fontsize = 20))
+
+
+ecoli_plot <- (asia.ecoli.plot | europe.ecoli.plot)/ (N.A.ecoli.plot | S.A.ecoli.plot)/
+                   (oceania.ecoli.plot)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = NULL),
+        legend.position = "top")
+
+
+plot2 <- patchwork::patchworkGrob(ecoli_plot)
+
+p2 <- grid.arrange(plot2, ncol = 1, nrow = 1,left = yleft, bottom = bottom)
+p2
+
+
+entero_plot <- (asia.entero.plot |europe.enterococcus.plot)/
+                    (N.A.entero.plot | oceania.enterococcus.plot)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = NULL),
+        legend.position = "top")
+
+
+
+plot3 <- patchwork::patchworkGrob(entero_plot)
+
+
+p3 <- grid.arrange(plot3, ncol = 1, nrow = 1,left = yleft, bottom = bottom)
+p3
+
+sal_plot <- (asia.salmonella.plot |N.A.salmonella.plot)/ (europe.Campylobacter.plot | N.A.campylobacter.plot)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = NULL),
+        legend.position = "top")
+
+
+
+
+
+
+
+plot4 <- patchwork::patchworkGrob(sal_plot)
+
+p4 <- grid.arrange(plot4, ncol = 1, nrow = 1,left = yleft, bottom = bottom)
+p4
+s.aureus_plot <- (europe.s.aureus.plot |N.A.saureus.plot)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "collect")&
+  theme(plot.tag = element_text(face = NULL),
+        legend.position = "top")
+
+
+
+plot5 <- patchwork::patchworkGrob(s.aureus_plot)
+
+p5 <- grid.arrange(plot5, ncol = 1, nrow = 1,left = yleft, bottom = bottom)
+
+p5
+
+```
+
+### Antimicrobial class resistance in chicken at the country level
+
+```{r chicken.antimicrobial class,echo=FALSE, fig.height=15, fig.width=20, message=FALSE}
+
+#Load data
+main_data <- read_csv("conv.csv")
+
+data1 <- main_data %>%
+  group_by(country) %>%
+  select("country",
+         "doi",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+         "no_isolates_resistant",
+         "no_isolates_susceptible",
+         "no_isolates_intermidiate",
+         "no_isolates" )
+
+#changing percentage resistance into numeric class and rounding off  
+data1$percent_resistant <- as.numeric(as.character
+                                      (data1$percent_resistant))
+
+data1$percent_resistant <- round(data1$percent_resistant, digits = 0)
+
+data2 <- data1 %>%
+  select("doi",
+         "country",
+         "farm_type",
+         "host",
+         "antimicrobial_compound",
+         "antimicrobial_class",
+         "pathogen",
+         "percent_resistant",
+         "no_isolates_resistant",
+         "no_isolates_susceptible",
+         "no_isolates_intermidiate",
+         "no_isolates" )
+
+
+
+
+
+
+data3 <- data2 %>%select("country",
+                         "doi",
+                         "farm_type",
+                         "host",
+                         "antimicrobial_class",
+                         "pathogen",
+                         "percent_resistant", "no_isolates")%>%
+  filter(pathogen != "Arcanobacterium pyogenes", pathogen != "Corynebacterium bovis",
+         pathogen != "Environmental streptococci")
+
+
+#changing percentage resistance into numeric class and rounding off  
+data3$percent_resistant <- as.numeric(as.character
+                                      (data3$percent_resistant))
+
+data3$percent_resistant <- round(data3$percent_resistant, digits = 0)
+
+
+
+
+usa<- data3
+#create a function to return the number of resistant isolates
+new.function1 <- function(x,y) {
+  (x*y)/100}
+
+ResIsousa <- mapply(new.function1, usa$percent_resistant, usa$no_isolates)
+ResIsousa <- round(ResIsousa, digits = 0)
+AMR.tmp.usa <- cbind(usa, ResIsousa)
+
+#determine total NIsolates
+usaNIsolates <- aggregate(no_isolates ~ doi + country + farm_type + 
+                              antimicrobial_class + pathogen+host + percent_resistant+
+                              ResIsousa, data = AMR.tmp.usa, FUN = sum)
+
+
+usaNIsolates$no_isolates <- sapply(usaNIsolates$no_isolates, function(x) sum(unlist(x)))
+
+#aggregate all resistant isolates and all NIsolates by speciesag, compound and region
+usares <- aggregate(ResIsousa ~ antimicrobial_class  + farm_type+
+                        host+country, 
+                      data = AMR.tmp.usa, FUN = sum)
+usaAll <- aggregate(no_isolates ~ antimicrobial_class  + farm_type+
+                       host +country, 
+                      data = AMR.tmp.usa, FUN = sum)
+#and divide ResIso/NIsolates to return true mean
+usaMean <- round((usares$ResIsousa /usaAll$no_isolates)*100, digits = 0)
+usaMeanDF <- as.data.frame(cbind(usares$antimicrobial_class,
+                                   usares$farm_type, usares$country,usares$host,
+                                  usaMean, usaAll$no_isolates))
+colnames(usaMeanDF) <- c("antimicrobial_class","farm_type","country","host",
+                           "Mean","no_isolates")
+usaMeanDF$Mean <- as.numeric(as.character(usaMeanDF$Mean))
+usaMeanDF$no_isolates <- as.numeric(as.character(usaMeanDF$no_isolates))
+#restrict display drug pairings where NIsolates > 10
+usaMeanDF = usaMeanDF[which(usaMeanDF$no_isolates >= 10),]
+
+# Compute the 95% CI of proportion where x = p_hat and y = n two tailed z = 1.96
+CI.function <- function(x,y) {
+  x + c(-1.96,1.96)*sqrt(x*(1-x)/y)}
+
+#95% CI
+CIusa<- as.data.frame(t(mapply(CI.function, usaMeanDF$Mean/100, usaMeanDF$no_isolates)))
+usaMeanDF <-cbind(usaMeanDF, round(CIusa*100, digits = 0))
+colnames(usaMeanDF) <- c("antimicrobial_class", "farm_type","country", "host",
+                           "Mean","no_isolates","CILow","CIHigh")
+usaMeanDF$CILow[usaMeanDF$CILow < 0] = 0
+usaMeanDF$CIHigh[usaMeanDF$CIHigh >100] = 100
+
+##remove data with less than 1% resistance
+usaMeanDF <- usaMeanDF%>%
+  filter(Mean>1)
+
+country.data <- usaMeanDF
+
+##Filter data from chicken species
+
+chicken.data <- country.data %>%
+  filter(host == "Chicken")
+
+
+
+
+##usa bar plot
+usa.1 <- chicken.data %>%
+  filter(country == "United States of America")
+
+usa.1<- usa.1[order(-usa.1$Mean), ]
+
+usa.bar <- ggbarplot(usa.1, "antimicrobial_class", "Mean", 
+                               fill = "farm_type", position = position_dodge(0.7),
+                               subtitle = "USA, n= 2,883",
+                               xlab = FALSE, ylab = FALSE,
+                               legend.title = "Farm type",
+                               font.subtitle = c(19))+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+
+usa.bar <- ggpar(usa.bar, ylim = c(0, 100))
+
+
+##China bar plot
+
+china.1 <- chicken.data %>%
+  filter(country == "China")
+
+china.1<- china.1[order(-china.1$Mean), ]
+
+china.bar <- ggbarplot(china.1, "antimicrobial_class", "Mean", 
+                            fill = "farm_type", position = position_dodge(0.7),
+                            subtitle = "China, n= 185",
+                            xlab = FALSE, ylab = FALSE,
+                            legend.title = "Farm type",
+                            font.subtitle = c(19))+
+  rotate_x_text(60)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+china.bar <- ggpar(china.bar, ylim = c(0, 100))
+
+
+uk.1 <- chicken.data %>%
+  filter(country == "United Kingdom")
+
+uk.1<- uk.1[order(-uk.1$Mean), ]
+
+uk.bar <- ggbarplot(uk.1, "antimicrobial_class", "Mean", 
+                         fill = "farm_type", position = position_dodge(0.7),
+                         subtitle = "United Kingdom, n= 30",
+                         xlab = FALSE, ylab = FALSE,
+                         legend.title = "Farm type",
+                         font.subtitle = c(19))+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+   font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+uk.bar <- ggpar(uk.bar, ylim = c(0, 100))
+
+port.1 <- chicken.data %>%
+  filter(country == "Portugal")
+
+port.1<- port.1[order(-port.1$Mean), ]
+
+port.bar <- ggbarplot(port.1, "antimicrobial_class", "Mean", 
+                    fill = "farm_type", position = position_dodge(0.7),
+                    subtitle = "Portugal, n= 43",
+                    xlab = FALSE, ylab = FALSE,
+                    legend.title = "Farm type",
+                    font.subtitle = c(19))+
+  rotate_x_text(45)+
+  geom_linerange(aes(group = farm_type, ymax = CIHigh, ymin = CILow),
+                 position = position_dodge(width = 0.7))+
+  font("xy.text", size = 19)+
+  font("legend.title",size = 19)+
+  font("legend.text", size = 19)
+
+port.bar <- ggpar(port.bar, ylim = c(0, 100))
+
+
+
+
+##Putting all plots together using patchwork
+
+country.plot <- (usa.bar | uk.bar)/
+  (port.bar | china.bar)+
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "(",
+                  tag_suffix = ")")+
+  plot_layout(guides = "auto")&
+  theme(plot.tag = element_text(face = NULL),
+        legend.position = "top")
+
+
+country.plot <- patchwork::patchworkGrob(country.plot)
+
+yleft1 <- textGrob("Percentage resistance", rot = 90, gp = gpar(fontsize = 20))
+ bottom1 <- textGrob("Antimicrobial class", gp = gpar(fontsize = 20))
+country.plot1 <- grid.arrange(country.plot, ncol = 1, nrow = 1,left = yleft1, bottom = bottom1)
+country.plot1
+
+
+```
+
+
+
+### Drug acronyms
+
+
+
+
+
+
+
+``` {r drugacronyms,echo=FALSE, fig.height=10, fig.width=5, message=FALSE}
+library(kableExtra)
+library(tinytex)
+library(AER)
+#Load data
+
+main_data <- read_csv("conv.csv")
+
+data1 <- main_data%>%
+  mutate(
+    continent =
+      ifelse(continent == "Oceania", 
+             "New Zealand", continent
+      )
+  )
+
+
+
+
+
+data2 <- main_data %>%
+  filter(pathogen == "Campylobacter" | pathogen == "E.coli" | pathogen == "Salmonella" |
+           pathogen == "S.aureus" | pathogen == "Enterococcus") %>%
+  select("antimicrobial_compound",
+         "antimicrobial_class",
+         "who_classification",
+         "antimicrobial")
+
+
+data3 <- data2 %>%
+  select(antimicrobial,antimicrobial_compound, antimicrobial_class,
+         who_classification) %>%
+  filter(antimicrobial_compound != "AZT", antimicrobial_compound != "CBP",
+         antimicrobial_compound != "CEX", antimicrobial_compound != "CFM",
+         antimicrobial_compound != "CEQ", antimicrobial_compound != "DAP",
+         antimicrobial_compound != "MOX", antimicrobial_compound != "MUP",
+         antimicrobial_compound != "NET", antimicrobial_compound != "PIR",
+         antimicrobial_compound != "TEC", antimicrobial_compound != "TEL",
+         antimicrobial_compound != "TOB") %>%
+  unique() %>%
+  arrange(antimicrobial)
+
+
+  data4 <- knitr::kable(data3, "html", "simple", col.names = c("Antimicrobial", "Acronym", "Antimicrobial class", "WHO classification"), align=c("l", "c", "c", "c"))      
+
+  data4 
+
+```
+
+**To be added when maps are ready**
