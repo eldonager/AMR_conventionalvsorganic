@@ -20,11 +20,11 @@ pacman::p_load(grid,gridtext)
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                    dev = "pdf",
-                   dpi = 300,
-                     echo = FALSE,
-                    cache = TRUE)
+#knitr::opts_chunk$set(echo = TRUE,
+                    #dev = "pdf",
+                   #dpi = 300,
+                     #echo = FALSE,
+                    #cache = TRUE)
 ```
 
 
